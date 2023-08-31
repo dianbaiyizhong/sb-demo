@@ -2,6 +2,7 @@ package com.nntk.sb.awesome.controller;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.nntk.sb.awesome.config.EhcacheConfig;
+import com.nntk.sb.awesome.service.DynamicDataSourceService;
 import com.nntk.sb.awesome.service.EhcacheService;
 import org.ehcache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,10 @@ public class TestController {
     private EhcacheConfig ehcacheConfig;
 
 
+    @Autowired
+    private DynamicDataSourceService dynamicDataSourceService;
+
+
     @RequestMapping("/ehcache")
     public String ehcache() {
 
@@ -30,5 +35,26 @@ public class TestController {
 
     }
 
+
+    @RequestMapping("/addDynamicDs")
+    public String addDynamicDs() {
+
+
+        dynamicDataSourceService.addDs();
+
+        return "success";
+
+    }
+
+
+    @RequestMapping("/testDynamicDs")
+    public String testDynamicDs() {
+
+
+        dynamicDataSourceService.test();
+
+        return "success";
+
+    }
 
 }

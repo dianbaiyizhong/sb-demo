@@ -7,11 +7,8 @@
 
 
     <cache alias="diskCache">
-        <expiry>
-            <ttl unit="seconds">10</ttl>
-        </expiry>
         <resources>
-            <disk unit="MB" persistent="true">1</disk>
+            <disk unit="MB" persistent="true">100</disk>
         </resources>
     </cache>
 </config>
