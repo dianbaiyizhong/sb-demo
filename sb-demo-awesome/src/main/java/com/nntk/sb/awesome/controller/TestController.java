@@ -50,7 +50,6 @@ public class TestController {
     @RequestMapping("/testDynamicDs")
     public String testDynamicDs() {
 
-
         dynamicDataSourceService.test();
 
         return "success";

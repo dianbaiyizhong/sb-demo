@@ -35,24 +35,18 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceService {
 
         for (int i = 0; i < 100; i++) {
             i = i % 10;
-            int finalI = i;
-            ThreadUtil.execAsync(() -> {
-                try {
-                    // 切换数据源
-                    DynamicDataSourceContextHolder.push("name" + finalI);
-                    // 获取当前数据源名称
-                    log.info("当前切换的数据源名称：{}", DynamicDataSourceContextHolder.peek());
-
-                    userMapper.selectById(1);
-
-                    log.info("success:{}", finalI);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    DynamicDataSourceContextHolder.poll();
-                }
-            });
+            try {
+                // 切换数据源
+                DynamicDataSourceContextHolder.push("name" + i);
+                // 获取当前数据源名称
+                log.info("当前切换的数据源名称：{}", DynamicDataSourceContextHolder.peek());
+                userMapper.selectById(1);
+                log.info("success:{}", i);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                DynamicDataSourceContextHolder.poll();
+            }
 
 
         }

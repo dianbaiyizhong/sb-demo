@@ -17,3 +17,5 @@ buildNumber.properties
 .classpath
 .idea
 ehcache
+
+sb-demo-vue/src/main/resources/static/**
