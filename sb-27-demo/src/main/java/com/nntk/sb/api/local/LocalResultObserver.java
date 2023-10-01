@@ -1,13 +1,13 @@
-package com.nntk.sb.api.github;
+package com.nntk.sb.api.local;
 
-import com.nntk.sb.http.BasicRespObserver;
+import com.nntk.sb.rest.BasicRespObserver;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * 统一处理，可以用来搞一些日志输出等
  */
 @Slf4j
-public class GithubResultObserver extends BasicRespObserver {
+public class LocalResultObserver extends BasicRespObserver {
     @Override
     public void callBusinessFail(int code, String messages) {
         log.info("callBusinessFail...");
@@ -16,7 +16,6 @@ public class GithubResultObserver extends BasicRespObserver {
     @Override
     public void complete() {
         log.info("complete...");
-
     }
 
     @Override

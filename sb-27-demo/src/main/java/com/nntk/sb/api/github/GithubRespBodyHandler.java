@@ -1,35 +1,28 @@
 package com.nntk.sb.api.github;
 
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
-import com.alibaba.fastjson2.TypeReference;
-import com.nntk.sb.http.BasicRespBodyHandler;
+import com.nntk.sb.rest.BasicRespBodyHandler;
 
-public class GithubRespBodyHandler<T> implements BasicRespBodyHandler<T> {
+public class GithubRespBodyHandler extends BasicRespBodyHandler {
 
     @Override
-    public boolean isBusinessSuccess(String bodyMessage) {
-        JSONObject jsonObject = JSON.parseObject(bodyMessage);
-        return jsonObject.getInteger("code") == 0;
+    public boolean isBusinessSuccess() {
+        return true;
     }
 
     @Override
-    public int getCode(String bodyMessage) {
-        JSONObject jsonObject = JSON.parseObject(bodyMessage);
-        return jsonObject.getInteger("code");
+    public int getCode() {
+        return 0;
     }
 
     @Override
-    public String getMessage(String bodyMessage) {
-        JSONObject jsonObject = JSON.parseObject(bodyMessage);
-        return jsonObject.getString("message");
+    public String getMessage() {
+        return null;
     }
 
     @Override
-    public T getData(String bodyMessage) {
-        return JSONObject.parseObject(JSON.parseObject(bodyMessage).getString("data"), new TypeReference<T>() {
-        });
+    public String getData() {
+        return httpBody;
     }
 
 }

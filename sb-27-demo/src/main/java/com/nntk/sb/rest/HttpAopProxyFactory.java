@@ -1,4 +1,4 @@
-package com.nntk.sb.http;
+package com.nntk.sb.rest;
 
 import org.springframework.beans.factory.FactoryBean;
 

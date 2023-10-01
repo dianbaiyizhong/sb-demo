@@ -1,9 +1,9 @@
-package com.nntk.sb.api.github;
+package com.nntk.sb.api.local;
 
 import lombok.Data;
 
 @Data
-public class GithubBodyEntity<T> {
+public class LocalBodyEntity<T> {
     private int code;
     private String message;
     private T data;

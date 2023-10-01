@@ -1,4 +1,4 @@
-package com.nntk.sb.http;
+package com.nntk.sb.rest;
 
 public abstract class BasicRespObserver {
 

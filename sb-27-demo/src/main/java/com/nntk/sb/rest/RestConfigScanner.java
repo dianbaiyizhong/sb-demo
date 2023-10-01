@@ -1,8 +1,8 @@
-package com.nntk.sb.http;
+package com.nntk.sb.rest;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
-import com.nntk.sb.http.annotation.JalorRestProxy;
+import com.nntk.sb.rest.annotation.JalorRestProxy;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 @Component
-public class JalorRestConfigScanner implements BeanDefinitionRegistryPostProcessor {
+public class RestConfigScanner implements BeanDefinitionRegistryPostProcessor {
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
         run(registry);

@@ -1,4 +1,4 @@
-package com.nntk.sb.http.annotation;
+package com.nntk.sb.rest.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

@@ -1,21 +1,21 @@
-package com.nntk.sb.http;
+package com.nntk.sb.rest;
 
+import com.alibaba.fastjson2.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
+
+import java.lang.reflect.Type;
 
 @Getter
 @Setter
 public class BasicCall<T> {
 
-    private T data;
     private int httpStatus;
     private Throwable throwable;
-    private String responseBody;
     private BasicRespObserver observer;
-
-    private BasicRespBodyHandler<T> basicRespBodyHandler;
-
+    private BasicRespBodyHandler basicRespBodyHandler;
+    private Type retureType;
 
     public BasicCall<T> observe(BasicRespObserver observer) {
         observer.complete();
@@ -24,23 +24,22 @@ public class BasicCall<T> {
             return this;
         }
         if (httpStatus != HttpStatus.OK.value()) {
-            observer.callHttpFail(httpStatus, responseBody);
+            observer.callHttpFail(httpStatus, basicRespBodyHandler.httpBody);
             return this;
         }
 
         observer.callHttpSuccess();
 
-        if (basicRespBodyHandler.isBusinessSuccess(responseBody)) {
+        if (basicRespBodyHandler.isBusinessSuccess()) {
             observer.callBusinessSuccess();
         } else {
-            observer.callBusinessFail(basicRespBodyHandler.getCode(responseBody), basicRespBodyHandler.getMessage(responseBody));
+            observer.callBusinessFail(basicRespBodyHandler.getCode(), basicRespBodyHandler.getMessage());
         }
-        data = basicRespBodyHandler.getData(responseBody);
         return this;
     }
 
-    public T getData() {
-
-        return basicRespBodyHandler.getData(responseBody);
+    public T getResult() {
+        String data = basicRespBodyHandler.getData();
+        return JSONObject.parseObject(data, retureType);
     }
 }
