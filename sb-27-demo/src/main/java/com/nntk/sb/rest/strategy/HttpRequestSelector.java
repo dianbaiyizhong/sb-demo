@@ -1,6 +1,7 @@
 package com.nntk.sb.rest.strategy;
 
 import com.nntk.sb.rest.annotation.GET;
+import com.nntk.sb.rest.annotation.POST;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -17,10 +18,14 @@ public class HttpRequestSelector {
     @Resource
     private GetRequestHandler getRequestHandler;
 
+    @Resource
+    private PostRequestHandler postRequestHandler;
+
     @PostConstruct
     public void postConstruct() {
 
         selectorMap.put(GET.class, getRequestHandler);
+        selectorMap.put(POST.class, postRequestHandler);
 
     }
 
