@@ -3,6 +3,7 @@ package com.nntk.sb.restplus.strategy;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.URLUtil;
+import com.nntk.sb.restplus.AbsHttpFactory;
 import com.nntk.sb.restplus.HttpPlusResponse;
 import com.nntk.sb.api.HutoolAbsHttpFactory;
 import com.nntk.sb.restplus.annotation.GET;
@@ -22,7 +23,7 @@ import java.util.Map;
 @Component
 public class GetRequestHandler implements HttpRequestBaseHandler {
     @Override
-    public HttpPlusResponse execute(ProceedingJoinPoint joinPoint) {
+    public HttpPlusResponse execute(ProceedingJoinPoint joinPoint, AbsHttpFactory httpFactory) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Class clazz = method.getDeclaringClass();
         // 解析base url

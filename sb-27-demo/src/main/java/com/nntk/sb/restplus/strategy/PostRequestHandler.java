@@ -2,8 +2,6 @@ package com.nntk.sb.restplus.strategy;
 
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.text.StrFormatter;
-import cn.hutool.extra.spring.SpringUtil;
-import com.alibaba.fastjson2.JSON;
 import com.nntk.sb.restplus.AbsHttpFactory;
 import com.nntk.sb.restplus.HttpPlusResponse;
 import com.nntk.sb.restplus.annotation.Body;
@@ -24,7 +22,7 @@ import java.util.Map;
 @Component
 public class PostRequestHandler implements HttpRequestBaseHandler {
     @Override
-    public HttpPlusResponse execute(ProceedingJoinPoint joinPoint) {
+    public HttpPlusResponse execute(ProceedingJoinPoint joinPoint, AbsHttpFactory httpFactory) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Class clazz = method.getDeclaringClass();
         // 解析base url
@@ -59,7 +57,7 @@ public class PostRequestHandler implements HttpRequestBaseHandler {
         for (Parameter parameter : parameters) {
             Object value = AnnotationUtil.getAnnotation(parameter, Body.class);
             if (value != null) {
-                requestBody = JSON.toJSONString(paramMap.get(parameter.getName()));
+                requestBody = httpFactory.toJsonString(paramMap.get(parameter.getName()));
                 break;
             }
         }
@@ -68,14 +66,7 @@ public class PostRequestHandler implements HttpRequestBaseHandler {
         String formatUrl = StrFormatter.format(url, pathMap, false);
 
 
-        Class<AbsHttpFactory> httpFactoryClass = RestAnnotationUtil.getObject(clazz, RestPlus.class, "httpFactory");
-
-        if (httpFactoryClass == AbsHttpFactory.class) {
-            throw new RuntimeException("you must extends AbsHttpFactory...");
-        }
-
-        AbsHttpFactory absHttpFactory = SpringUtil.getBean(httpFactoryClass);
-        HttpPlusResponse httpPlusResponse = absHttpFactory.post(formatUrl, null, requestBody);
+        HttpPlusResponse httpPlusResponse = httpFactory.post(formatUrl, null, requestBody);
         return httpPlusResponse;
 
     }

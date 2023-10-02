@@ -10,6 +10,7 @@ import com.nntk.sb.restplus.annotation.RestPlus;
 import com.nntk.sb.restplus.strategy.HttpRequestBaseHandler;
 import com.nntk.sb.restplus.strategy.HttpRequestSelector;
 import com.nntk.sb.restplus.util.HttpRespObserver;
+import com.nntk.sb.restplus.util.RestAnnotationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -51,12 +52,21 @@ public class RestPlusAopConfig {
 
         HttpRequestBaseHandler select = httpRequestSelector.select(method.getAnnotations()[0].annotationType());
 
+
+        // 获取http 工厂类
+        Class<AbsHttpFactory> httpFactoryClass = RestAnnotationUtil.getObject(clazz, RestPlus.class, "httpFactory");
+        AbsHttpFactory httpFactory = SpringUtil.getBean(httpFactoryClass);
+
+        if (httpFactoryClass == AbsHttpFactory.class) {
+            throw new RuntimeException("you must extends AbsHttpFactory...");
+        }
+
         // 获取返回类型
         Type genericReturnType = method.getGenericReturnType();
         if (genericReturnType == Void.class) {
             Void vo = new Void();
             try {
-                HttpPlusResponse response = select.execute(joinPoint);
+                HttpPlusResponse response = select.execute(joinPoint, httpFactory);
                 vo.setHttpStatus(response.getHttpStatus());
                 handler.setHttpBody(response.getBody());
             } catch (Exception e) {
@@ -71,12 +81,13 @@ public class RestPlusAopConfig {
         } else {
             Call<Object> call = new Call<>();
             try {
-                HttpPlusResponse response = select.execute(joinPoint);
+                HttpPlusResponse response = select.execute(joinPoint, httpFactory);
                 Type typeArgument = TypeUtil.getTypeArgument(TypeUtil.getReturnType(method));
                 call.setRetureType(typeArgument);
                 call.setHttpStatus(response.getHttpStatus());
                 handler.setHttpBody(response.getBody());
                 call.setConfigObserver(observer);
+                call.setHttpFactory(httpFactory);
             } catch (Exception e) {
                 call.setThrowable(e);
             } finally {

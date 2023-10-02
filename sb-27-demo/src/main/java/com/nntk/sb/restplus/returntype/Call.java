@@ -1,6 +1,6 @@
 package com.nntk.sb.restplus.returntype;
 
-import com.alibaba.fastjson2.JSONObject;
+import com.nntk.sb.restplus.AbsHttpFactory;
 import com.nntk.sb.restplus.BasicRespObserver;
 import com.nntk.sb.restplus.RespBodyHandleRule;
 import com.nntk.sb.restplus.util.HttpRespObserver;
@@ -23,6 +23,8 @@ public class Call<T> {
 
     private boolean isObserve = false;
 
+    private AbsHttpFactory httpFactory;
+
 
     public Call<T> observe(BasicRespObserver observer) {
         isObserve = true;
@@ -35,7 +37,7 @@ public class Call<T> {
             observe(configObserver);
         }
         String data = respBodyHandleRule.getHttpBody();
-        return JSONObject.parseObject(data, retureType);
+        return httpFactory.parseObject(data, retureType);
     }
 
     public T executeForData() {
@@ -43,7 +45,7 @@ public class Call<T> {
             observe(configObserver);
         }
         String data = respBodyHandleRule.getData();
-        return JSONObject.parseObject(data, retureType);
+        return httpFactory.parseObject(data, retureType);
     }
 
 
