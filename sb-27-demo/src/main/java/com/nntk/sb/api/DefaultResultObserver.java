@@ -1,6 +1,6 @@
 package com.nntk.sb.api;
 
-import com.nntk.sb.rest.BasicRespObserver;
+import com.nntk.sb.restplus.BasicRespObserver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
