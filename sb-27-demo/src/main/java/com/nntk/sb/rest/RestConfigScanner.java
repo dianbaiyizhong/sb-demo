@@ -2,7 +2,7 @@ package com.nntk.sb.rest;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
-import com.nntk.sb.rest.annotation.JalorRestProxy;
+import com.nntk.sb.rest.annotation.RestPlus;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -28,7 +28,7 @@ public class RestConfigScanner implements BeanDefinitionRegistryPostProcessor {
 
     public void run(BeanDefinitionRegistry registry) {
 
-        Set<Class<?>> scanPackage = ClassUtil.scanPackageByAnnotation("com.nntk.sb", JalorRestProxy.class);
+        Set<Class<?>> scanPackage = ClassUtil.scanPackageByAnnotation("com.nntk.sb", RestPlus.class);
 
         for (Class<?> cls : scanPackage) {
             BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(cls);

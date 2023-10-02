@@ -2,7 +2,9 @@ package com.nntk.sb.api.github;
 
 
 import com.nntk.sb.rest.BasicRespBodyHandler;
+import org.springframework.stereotype.Component;
 
+@Component
 public class GithubRespBodyHandler extends BasicRespBodyHandler {
 
     @Override

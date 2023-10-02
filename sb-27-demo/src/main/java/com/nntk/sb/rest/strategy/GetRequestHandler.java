@@ -3,12 +3,11 @@ package com.nntk.sb.rest.strategy;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
+import com.nntk.sb.rest.HttpPlusResponse;
+import com.nntk.sb.api.HutoolHttpFactory;
 import com.nntk.sb.rest.annotation.GET;
-import com.nntk.sb.rest.annotation.JalorRestProxy;
 import com.nntk.sb.rest.annotation.Path;
+import com.nntk.sb.rest.annotation.RestPlus;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -23,11 +22,11 @@ import java.util.Map;
 @Component
 public class GetRequestHandler implements HttpRequestBaseHandler {
     @Override
-    public HttpResponse execute(ProceedingJoinPoint joinPoint) {
+    public HttpPlusResponse execute(ProceedingJoinPoint joinPoint) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Class clazz = method.getDeclaringClass();
         // 解析base url
-        String baseUrl = AnnotationUtil.getAnnotationValue(clazz, JalorRestProxy.class, "baseUrl");
+        String baseUrl = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "baseUrl");
         String childUrl = AnnotationUtil.getAnnotationValue(method, GET.class, "url");
         String url = baseUrl + childUrl;
 
@@ -67,9 +66,10 @@ public class GetRequestHandler implements HttpRequestBaseHandler {
 
         formatUrl = formatUrl + "?" + query;
 
-        HttpRequest request = HttpUtil.createGet(formatUrl);
+        HutoolHttpFactory factory = new HutoolHttpFactory();
+        HttpPlusResponse httpPlusResponse = factory.get(formatUrl, null);
 
-        return request.execute();
+        return httpPlusResponse;
 
     }
 

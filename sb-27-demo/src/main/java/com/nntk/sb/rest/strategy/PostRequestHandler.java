@@ -2,15 +2,14 @@ package com.nntk.sb.rest.strategy;
 
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.text.StrFormatter;
-import cn.hutool.http.ContentType;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson2.JSON;
+import com.nntk.sb.rest.HttpFactory;
+import com.nntk.sb.rest.HttpPlusResponse;
 import com.nntk.sb.rest.annotation.Body;
-import com.nntk.sb.rest.annotation.JalorRestProxy;
 import com.nntk.sb.rest.annotation.POST;
 import com.nntk.sb.rest.annotation.Path;
+import com.nntk.sb.rest.annotation.RestPlus;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -24,11 +23,11 @@ import java.util.Map;
 @Component
 public class PostRequestHandler implements HttpRequestBaseHandler {
     @Override
-    public HttpResponse execute(ProceedingJoinPoint joinPoint) {
+    public HttpPlusResponse execute(ProceedingJoinPoint joinPoint) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Class clazz = method.getDeclaringClass();
         // 解析base url
-        String baseUrl = AnnotationUtil.getAnnotationValue(clazz, JalorRestProxy.class, "baseUrl");
+        String baseUrl = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "baseUrl");
         String childUrl = AnnotationUtil.getAnnotationValue(method, POST.class, "url");
         String url = baseUrl + childUrl;
 
@@ -66,11 +65,11 @@ public class PostRequestHandler implements HttpRequestBaseHandler {
 
         String formatUrl = StrFormatter.format(url, pathMap, false);
 
-        HttpRequest request = HttpUtil.createPost(formatUrl);
-        request.contentType(ContentType.JSON.getValue());
-        request.body(requestBody);
-        HttpResponse response = request.execute();
-        return response;
+
+        Class<HttpFactory> httpFactoryClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "httpFactory");
+        HttpFactory httpFactory = SpringUtil.getBean(httpFactoryClass);
+        HttpPlusResponse httpPlusResponse = httpFactory.post(formatUrl, null, requestBody);
+        return httpPlusResponse;
 
     }
 

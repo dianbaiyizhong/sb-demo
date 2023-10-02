@@ -1,13 +1,15 @@
-package com.nntk.sb.api.local;
+package com.nntk.sb.api;
 
 import com.nntk.sb.rest.BasicRespObserver;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
- * 统一处理，可以用来搞一些日志输出等
+ * 结果统一处理，可以用来搞一些日志输出等
  */
 @Slf4j
-public class LocalResultObserver extends BasicRespObserver {
+@Component
+public class DefaultResultObserver extends BasicRespObserver {
     @Override
     public void callBusinessFail(int code, String messages) {
         log.info("callBusinessFail...");
@@ -20,7 +22,7 @@ public class LocalResultObserver extends BasicRespObserver {
 
     @Override
     public void callHttpFail(int httpStatus, String message) {
-        log.info("callHttpFail...");
+        log.info("callHttpFail...{},{}", httpStatus,message);
 
     }
 
