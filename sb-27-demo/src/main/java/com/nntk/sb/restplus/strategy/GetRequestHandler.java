@@ -5,7 +5,7 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.URLUtil;
 import com.nntk.sb.restplus.AbsHttpFactory;
 import com.nntk.sb.restplus.HttpPlusResponse;
-import com.nntk.sb.api.HutoolAbsHttpFactory;
+import com.nntk.sb.api.HutoolHttpFactory;
 import com.nntk.sb.restplus.annotation.GET;
 import com.nntk.sb.restplus.annotation.Path;
 import com.nntk.sb.restplus.annotation.RestPlus;
@@ -67,7 +67,7 @@ public class GetRequestHandler implements HttpRequestBaseHandler {
 
         formatUrl = formatUrl + "?" + query;
 
-        HutoolAbsHttpFactory factory = new HutoolAbsHttpFactory();
+        HutoolHttpFactory factory = new HutoolHttpFactory();
         HttpPlusResponse httpPlusResponse = factory.get(formatUrl, null);
 
         return httpPlusResponse;

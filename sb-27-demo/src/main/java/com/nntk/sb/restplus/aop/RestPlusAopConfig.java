@@ -73,6 +73,7 @@ public class RestPlusAopConfig {
                 vo.setThrowable(e);
             } finally {
                 vo.setRespBodyHandleRule(handler);
+
             }
             // 自动触发观察
             HttpRespObserver.observe(observer, vo.getThrowable(), vo.getHttpStatus(), vo.getRespBodyHandleRule());
@@ -86,12 +87,12 @@ public class RestPlusAopConfig {
                 call.setRetureType(typeArgument);
                 call.setHttpStatus(response.getHttpStatus());
                 handler.setHttpBody(response.getBody());
-                call.setConfigObserver(observer);
-                call.setHttpFactory(httpFactory);
             } catch (Exception e) {
                 call.setThrowable(e);
             } finally {
                 call.setRespBodyHandleRule(handler);
+                call.setConfigObserver(observer);
+                call.setHttpFactory(httpFactory);
             }
 
             return call;

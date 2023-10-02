@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 @Component
-public class HutoolAbsHttpFactory extends AbsHttpFactory {
+public class HutoolHttpFactory extends AbsHttpFactory {
     @Override
     public String toJsonString(Object object) {
         return JSON.toJSONString(object);
