@@ -1,4 +1,4 @@
-package com.nntk.sb.api.github;
+package com.nntk.sb.api.my;
 
 import lombok.Data;
 

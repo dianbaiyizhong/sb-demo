@@ -10,6 +10,7 @@ import com.nntk.sb.restplus.annotation.Body;
 import com.nntk.sb.restplus.annotation.POST;
 import com.nntk.sb.restplus.annotation.Path;
 import com.nntk.sb.restplus.annotation.RestPlus;
+import com.nntk.sb.restplus.util.RestAnnotationUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -27,7 +28,8 @@ public class PostRequestHandler implements HttpRequestBaseHandler {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Class clazz = method.getDeclaringClass();
         // 解析base url
-        String baseUrl = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "baseUrl");
+        String baseUrl = RestAnnotationUtil.getValue(clazz, RestPlus.class, "baseUrl");
+
         String childUrl = AnnotationUtil.getAnnotationValue(method, POST.class, "url");
         String url = baseUrl + childUrl;
 
@@ -66,7 +68,12 @@ public class PostRequestHandler implements HttpRequestBaseHandler {
         String formatUrl = StrFormatter.format(url, pathMap, false);
 
 
-        Class<AbsHttpFactory> httpFactoryClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "httpFactory");
+        Class<AbsHttpFactory> httpFactoryClass = RestAnnotationUtil.getObject(clazz, RestPlus.class, "httpFactory");
+
+        if (httpFactoryClass == AbsHttpFactory.class) {
+            throw new RuntimeException("you must extends AbsHttpFactory...");
+        }
+
         AbsHttpFactory absHttpFactory = SpringUtil.getBean(httpFactoryClass);
         HttpPlusResponse httpPlusResponse = absHttpFactory.post(formatUrl, null, requestBody);
         return httpPlusResponse;

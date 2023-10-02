@@ -9,6 +9,7 @@ import com.nntk.sb.restplus.returntype.Void;
 import com.nntk.sb.restplus.annotation.RestPlus;
 import com.nntk.sb.restplus.strategy.HttpRequestBaseHandler;
 import com.nntk.sb.restplus.strategy.HttpRequestSelector;
+import com.nntk.sb.restplus.util.HttpRespObserver;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -58,12 +59,14 @@ public class RestPlusAopConfig {
                 HttpPlusResponse response = select.execute(joinPoint);
                 vo.setHttpStatus(response.getHttpStatus());
                 handler.setHttpBody(response.getBody());
-                vo.setRespBodyHandleRule(handler);
             } catch (Exception e) {
                 vo.setThrowable(e);
+            } finally {
+                vo.setRespBodyHandleRule(handler);
             }
             // 自动触发观察
-            vo.observe(observer);
+            HttpRespObserver.observe(observer, vo.getThrowable(), vo.getHttpStatus(), vo.getRespBodyHandleRule());
+
             return vo;
         } else {
             Call<Object> call = new Call<>();
@@ -73,10 +76,11 @@ public class RestPlusAopConfig {
                 call.setRetureType(typeArgument);
                 call.setHttpStatus(response.getHttpStatus());
                 handler.setHttpBody(response.getBody());
-                call.setRespBodyHandleRule(handler);
                 call.setConfigObserver(observer);
             } catch (Exception e) {
                 call.setThrowable(e);
+            } finally {
+                call.setRespBodyHandleRule(handler);
             }
 
             return call;

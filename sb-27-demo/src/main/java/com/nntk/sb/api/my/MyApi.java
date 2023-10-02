@@ -1,21 +1,18 @@
-package com.nntk.sb.api.github;
+package com.nntk.sb.api.my;
 
 import com.nntk.sb.api.DefaultResultObserver;
-import com.nntk.sb.api.HutoolAbsHttpFactory;
+import com.nntk.sb.restplus.annotation.*;
 import com.nntk.sb.restplus.returntype.Call;
 import com.nntk.sb.restplus.returntype.Void;
-import com.nntk.sb.restplus.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
 @RestPlus(
-        baseUrl = "http://localhost:8080",
         respHandler = MyRespBodyHandleRule.class,
-        observe = DefaultResultObserver.class,
-        httpFactory = HutoolAbsHttpFactory.class
+        observe = DefaultResultObserver.class
 )
-public interface MyApi {
+public interface MyApi extends MyBaseApi {
 
     @GET(url = "/list/{id}")
     Call<List<UserInfo>> getList(@Path("id") Integer userName, @QueryParam("num") int num, @QueryMap Map<String, Object> map);
@@ -26,7 +23,7 @@ public interface MyApi {
 
 
     @POST(url = "/login")
-    Call<Object> login2(@Body Map<String, Object> map);
+    Call login2(@Body Map<String, Object> map);
 
 
     @POST(url = "/login")

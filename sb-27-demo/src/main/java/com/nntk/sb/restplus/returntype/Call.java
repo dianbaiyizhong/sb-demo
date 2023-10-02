@@ -34,6 +34,14 @@ public class Call<T> {
         if (!isObserve) {
             observe(configObserver);
         }
+        String data = respBodyHandleRule.getHttpBody();
+        return JSONObject.parseObject(data, retureType);
+    }
+
+    public T executeForData() {
+        if (!isObserve) {
+            observe(configObserver);
+        }
         String data = respBodyHandleRule.getData();
         return JSONObject.parseObject(data, retureType);
     }

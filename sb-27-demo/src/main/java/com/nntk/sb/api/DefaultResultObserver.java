@@ -22,14 +22,13 @@ public class DefaultResultObserver extends BasicRespObserver {
 
     @Override
     public void callHttpFail(int httpStatus, String message) {
-        log.info("callHttpFail...{},{}", httpStatus,message);
+        log.info("callHttpFail...{},{}", httpStatus, message);
 
     }
 
     @Override
     public void callUnknownException(Throwable throwable) {
-        log.info("callUnknownException...");
-
+        log.error("callUnknownException...{}", throwable);
     }
 
     @Override

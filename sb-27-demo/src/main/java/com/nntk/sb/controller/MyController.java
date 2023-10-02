@@ -1,7 +1,9 @@
 package com.nntk.sb.controller;
 
-import com.nntk.sb.api.github.UserInfo;
-import com.nntk.sb.api.github.MyApi;
+import com.nntk.sb.api.DefaultResultObserver;
+import com.nntk.sb.api.my.MyBodyEntity;
+import com.nntk.sb.api.my.UserInfo;
+import com.nntk.sb.api.my.MyApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,15 +38,21 @@ public class MyController {
     public Object login1() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sex", "男");
-        myApi.login1(paramMap).executeForResult();
-        return "success";
+        MyBodyEntity myBodyEntity = myApi.login1(paramMap).executeForResult();
+        return myBodyEntity;
     }
 
     @GetMapping("/login2")
     public Object login2() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sex", "男");
-        myApi.login2(paramMap);
+        myApi.login2(paramMap).observe(new DefaultResultObserver() {
+            @Override
+            public void complete() {
+                super.complete();
+                log.info("=====my complete");
+            }
+        });
         return "success";
     }
 

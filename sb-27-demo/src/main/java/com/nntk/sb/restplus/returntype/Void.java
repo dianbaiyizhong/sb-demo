@@ -13,8 +13,5 @@ public class Void {
     private Throwable throwable;
     private RespBodyHandleRule respBodyHandleRule;
 
-    public void observe(BasicRespObserver observer) {
-        HttpRespObserver.observe(observer, throwable, httpStatus, respBodyHandleRule);
-    }
 
 }

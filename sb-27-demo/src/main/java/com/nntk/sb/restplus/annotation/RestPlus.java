@@ -3,14 +3,13 @@ package com.nntk.sb.restplus.annotation;
 import com.nntk.sb.restplus.RespBodyHandleRule;
 import com.nntk.sb.restplus.BasicRespObserver;
 import com.nntk.sb.restplus.AbsHttpFactory;
+import org.springframework.stereotype.Component;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Inherited
 public @interface RestPlus {
     String baseUrl() default "";
 
@@ -18,6 +17,6 @@ public @interface RestPlus {
 
     Class<? extends BasicRespObserver> observe() default BasicRespObserver.class;
 
-    Class<? extends AbsHttpFactory> httpFactory();
+    Class<? extends AbsHttpFactory> httpFactory() default AbsHttpFactory.class;
 
 }
