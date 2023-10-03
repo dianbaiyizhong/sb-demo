@@ -1,15 +1,16 @@
 package com.nntk.sb.controller;
 
 import com.nntk.sb.api.DefaultResultObserver;
+import com.nntk.sb.api.my.MyApi;
 import com.nntk.sb.api.my.MyBodyEntity;
 import com.nntk.sb.api.my.UserInfo;
-import com.nntk.sb.api.my.MyApi;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +71,17 @@ public class MyController {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", "sss");
         myApi.register(paramMap);
+        return "success";
+    }
+
+    @GetMapping("/upload")
+    public Object upload() {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("type", 1);
+        FileSystemResource resource = new FileSystemResource(new File("C:\\Users\\hhm\\Downloads\\Capture001.png"));
+
+        paramMap.put("file", resource);
+        myApi.upload(paramMap);
         return "success";
     }
 }

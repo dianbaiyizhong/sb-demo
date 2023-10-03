@@ -4,6 +4,7 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -41,4 +42,15 @@ public class ApiController {
 
     }
 
+    @PostMapping("/upload")
+    public Object upload(@RequestParam("file")
+                         MultipartFile blobFile, @RequestParam("type") Integer type) {
+        log.info("=====upload:{},{}", blobFile, type);
+
+        Map<String, Object> ret = new HashMap<>();
+        ret.put("code", 0);
+        ret.put("message", "success");
+        return ret;
+
+    }
 }
