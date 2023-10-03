@@ -2,7 +2,7 @@ package com.nntk.sb.api.my;
 
 import com.nntk.sb.api.DefaultResultObserver;
 import com.nntk.sb.api.RestTemplateHttpFactory;
-import com.nntk.sb.restplus.annotation.RestPlus;
+import com.nntk.restplus.annotation.RestPlus;
 
 @RestPlus(
         httpFactory = RestTemplateHttpFactory.class,

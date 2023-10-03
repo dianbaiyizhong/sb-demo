@@ -1,7 +1,8 @@
 package com.nntk.sb.api.my;
 
-import com.nntk.sb.restplus.annotation.*;
-import com.nntk.sb.restplus.returntype.Call;
+
+import com.nntk.restplus.annotation.*;
+import com.nntk.restplus.returntype.Call;
 
 import java.util.List;
 import java.util.Map;

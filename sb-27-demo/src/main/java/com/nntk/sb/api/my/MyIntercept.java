@@ -1,7 +1,7 @@
 package com.nntk.sb.api.my;
 
-import com.nntk.sb.restplus.intercept.ParamHandleIntercept;
-import com.nntk.sb.restplus.strategy.HttpExecuteContext;
+import com.nntk.restplus.intercept.ParamHandleIntercept;
+import com.nntk.restplus.strategy.HttpExecuteContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
