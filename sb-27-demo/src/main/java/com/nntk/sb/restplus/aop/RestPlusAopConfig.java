@@ -3,10 +3,15 @@ package com.nntk.sb.restplus.aop;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.nntk.sb.restplus.*;
+import cn.hutool.http.ContentType;
+import com.nntk.sb.restplus.AbsHttpFactory;
+import com.nntk.sb.restplus.BasicRespObserver;
+import com.nntk.sb.restplus.HttpPlusResponse;
+import com.nntk.sb.restplus.RespBodyHandleRule;
+import com.nntk.sb.restplus.annotation.FormData;
+import com.nntk.sb.restplus.annotation.RestPlus;
 import com.nntk.sb.restplus.returntype.Call;
 import com.nntk.sb.restplus.returntype.Void;
-import com.nntk.sb.restplus.annotation.RestPlus;
 import com.nntk.sb.restplus.strategy.HttpRequestBaseHandler;
 import com.nntk.sb.restplus.strategy.HttpRequestSelector;
 import com.nntk.sb.restplus.util.HttpRespObserver;
@@ -20,8 +25,10 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 
 @Component
 @Aspect
@@ -50,16 +57,28 @@ public class RestPlusAopConfig {
         RespBodyHandleRule handler = SpringUtil.getBean(respHandlerClass);
         BasicRespObserver observer = SpringUtil.getBean(observerClass);
 
-        HttpRequestBaseHandler select = httpRequestSelector.select(method.getAnnotations()[0].annotationType());
+
+
+        Annotation requestTypeAnnotation = Arrays.stream(method.getAnnotations()).filter(annotationValue -> httpRequestSelector.isRequestType(annotationValue.annotationType())).findAny().get();
+
+        HttpRequestBaseHandler select = httpRequestSelector.select(requestTypeAnnotation.annotationType());
 
 
         // 获取http 工厂类
         Class<AbsHttpFactory> httpFactoryClass = RestAnnotationUtil.getObject(clazz, RestPlus.class, "httpFactory");
         AbsHttpFactory httpFactory = SpringUtil.getBean(httpFactoryClass);
 
+        boolean isFormData = Arrays.stream(method.getAnnotations()).anyMatch(annotation -> annotation.annotationType() == FormData.class);
+
+        if (isFormData) {
+            httpFactory.setContentType(ContentType.MULTIPART.getValue());
+        } else {
+            httpFactory.setContentType(ContentType.JSON.getValue());
+        }
         if (httpFactoryClass == AbsHttpFactory.class) {
             throw new RuntimeException("you must extends AbsHttpFactory...");
         }
+
 
         // 获取返回类型
         Type genericReturnType = method.getGenericReturnType();

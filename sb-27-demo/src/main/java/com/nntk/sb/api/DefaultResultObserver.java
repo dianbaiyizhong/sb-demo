@@ -34,7 +34,6 @@ public class DefaultResultObserver extends BasicRespObserver {
     @Override
     public void callHttpSuccess() {
         log.info("callHttpSuccess...");
-
     }
 
     @Override

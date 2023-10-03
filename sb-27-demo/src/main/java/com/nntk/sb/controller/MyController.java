@@ -38,7 +38,8 @@ public class MyController {
     public Object login1() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sex", "男");
-        MyBodyEntity myBodyEntity = myApi.login1(paramMap).executeForResult();
+        MyBodyEntity myBodyEntity = myApi.login1(paramMap)
+                .executeForResult();
         return myBodyEntity;
     }
 
@@ -64,4 +65,11 @@ public class MyController {
         return "success";
     }
 
+    @GetMapping("/register")
+    public Object register() {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("name", "sss");
+        myApi.register(paramMap);
+        return "success";
+    }
 }

@@ -13,7 +13,12 @@ public class MyRespBodyHandleRule extends RespBodyHandleRule {
 
     @Override
     public void init(String httpBody) {
-        this.jsonObject = JSON.parseObject(getHttpBody());
+        this.jsonObject = JSON.parseObject(httpBody);
+    }
+
+    @Override
+    public int getCode() {
+        return jsonObject.getInteger("code");
     }
 
     @Override
@@ -21,10 +26,6 @@ public class MyRespBodyHandleRule extends RespBodyHandleRule {
         return getCode() == 0;
     }
 
-    @Override
-    public int getCode() {
-        return jsonObject.getInteger("code");
-    }
 
     @Override
     public String getMessage() {

@@ -1,6 +1,7 @@
 package com.nntk.sb.api;
 
 import com.alibaba.fastjson2.JSON;
+import com.google.common.collect.Lists;
 import com.nntk.sb.restplus.AbsHttpFactory;
 import com.nntk.sb.restplus.HttpPlusResponse;
 import org.springframework.http.HttpEntity;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Type;
@@ -27,20 +30,47 @@ public class RestTemplateHttpFactory extends AbsHttpFactory {
     }
 
     @Override
-    public HttpPlusResponse post(String url, Map<String, String> headerMap, String body) {
+    public HttpPlusResponse post(String url, Map<String, String> headerMap, Map<String, Object> bodyMap) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(MediaType.parseMediaType(getContentType()));
 
         if (headerMap != null) {
             headers.setAll(headerMap);
         }
-        HttpEntity<String> entity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
+        ResponseEntity<String> responseEntity = null;
+
+        if (getContentType().equals(MediaType.MULTIPART_FORM_DATA_VALUE)) {
+            HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(map2MultiValueMap(bodyMap), headers);
+            responseEntity = restTemplate.postForEntity(url, entity, String.class);
+
+        } else {
+            HttpEntity<String> entity = new HttpEntity<>(JSON.toJSONString(bodyMap), headers);
+            responseEntity = restTemplate.postForEntity(url, entity, String.class);
+        }
         HttpPlusResponse httpPlusResponse = new HttpPlusResponse();
         httpPlusResponse.setHttpStatus(responseEntity.getStatusCodeValue());
         httpPlusResponse.setBody(responseEntity.getBody());
         return httpPlusResponse;
+    }
+
+    private static MultiValueMap<String, Object> map2MultiValueMap(Map<String, Object> params) {
+        MultiValueMap<String, Object> multiValueMap = new LinkedMultiValueMap<>();
+        for (Map.Entry<String, Object> entry : params.entrySet())
+            multiValueMap.put(entry.getKey(), Lists.newArrayList(entry.getValue()));
+
+        return multiValueMap;
+    }
+
+
+    @Override
+    public HttpPlusResponse put(String url, Map<String, String> headerMap, String body) {
+        return null;
+    }
+
+    @Override
+    public HttpPlusResponse delete(String url, Map<String, String> headerMap, String body) {
+        return null;
     }
 
     @Override

@@ -12,10 +12,10 @@ public abstract class RespBodyHandleRule {
     private String httpBody;
 
     public abstract void init(String httpBody);
+    public abstract int getCode();
 
     public abstract boolean isBusinessSuccess();
 
-    public abstract int getCode();
 
     public abstract String getMessage();
 

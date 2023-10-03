@@ -13,7 +13,12 @@ import java.util.Map;
 @Component
 public class HttpRequestSelector {
 
-    private Map<Class<? extends Annotation>, HttpRequestBaseHandler> selectorMap = new HashMap<>();
+    private Map<Class<? extends Annotation>, HttpRequestBaseHandler> requestTypeMap = new HashMap<>();
+
+
+    public boolean isRequestType(Class<? extends Annotation> type) {
+        return requestTypeMap.containsKey(type);
+    }
 
     @Resource
     private GetRequestHandler getRequestHandler;
@@ -24,13 +29,13 @@ public class HttpRequestSelector {
     @PostConstruct
     public void postConstruct() {
 
-        selectorMap.put(GET.class, getRequestHandler);
-        selectorMap.put(POST.class, postRequestHandler);
+        requestTypeMap.put(GET.class, getRequestHandler);
+        requestTypeMap.put(POST.class, postRequestHandler);
 
     }
 
     public HttpRequestBaseHandler select(Class<? extends Annotation> type) {
-        return selectorMap.get(type);
+        return requestTypeMap.get(type);
     }
 
 }

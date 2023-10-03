@@ -11,6 +11,11 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Type;
 import java.util.Map;
 
+/**
+ * 工厂模式，实现子产品，底层映射调用
+ * 1.自定义数据转化逻辑（可以用gson，fastjson，jackson等）
+ * 2.自定义http请求方式，有hutool，okhttp，restTemplate
+ */
 @Component
 public class HutoolHttpFactory extends AbsHttpFactory {
     @Override
@@ -24,10 +29,9 @@ public class HutoolHttpFactory extends AbsHttpFactory {
     }
 
     @Override
-    public HttpPlusResponse post(String url, Map<String, String> header, String body) {
+    public HttpPlusResponse post(String url, Map<String, String> header, Map<String, Object> bodyMap) {
         HttpRequest httpRequest = HttpUtil.createPost(url);
-
-        httpRequest.body(body);
+        httpRequest.body(JSON.toJSONString(bodyMap));
         if (header != null) {
             httpRequest.addHeaders(header);
         }
@@ -36,6 +40,16 @@ public class HutoolHttpFactory extends AbsHttpFactory {
         httpPlusResponse.setHttpStatus(response.getStatus());
         httpPlusResponse.setBody(response.body());
         return httpPlusResponse;
+    }
+
+    @Override
+    public HttpPlusResponse put(String url, Map<String, String> headerMap, String body) {
+        return null;
+    }
+
+    @Override
+    public HttpPlusResponse delete(String url, Map<String, String> headerMap, String body) {
+        return null;
     }
 
     @Override

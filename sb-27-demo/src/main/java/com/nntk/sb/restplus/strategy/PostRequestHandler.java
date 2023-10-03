@@ -24,7 +24,7 @@ public class PostRequestHandler implements HttpRequestBaseHandler {
     @Override
     public HttpPlusResponse execute(ProceedingJoinPoint joinPoint, AbsHttpFactory httpFactory) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
-        Class clazz = method.getDeclaringClass();
+        Class<?> clazz = method.getDeclaringClass();
         // 解析base url
         String baseUrl = RestAnnotationUtil.getValue(clazz, RestPlus.class, "baseUrl");
 
@@ -52,12 +52,11 @@ public class PostRequestHandler implements HttpRequestBaseHandler {
             }
         }
 
-        String requestBody = null;
-
+        Map<String, Object> requestBody = null;
         for (Parameter parameter : parameters) {
             Object value = AnnotationUtil.getAnnotation(parameter, Body.class);
             if (value != null) {
-                requestBody = httpFactory.toJsonString(paramMap.get(parameter.getName()));
+                requestBody = (Map<String, Object>) paramMap.get(parameter.getName());
                 break;
             }
         }

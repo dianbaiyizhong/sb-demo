@@ -29,4 +29,16 @@ public class ApiController {
         ret.put("message", "success");
         return ret;
     }
+
+    @PostMapping("/register")
+    public Object register(@RequestParam("name") String name) {
+        log.info("=====register:{}", name);
+
+        Map<String, Object> ret = new HashMap<>();
+        ret.put("code", 0);
+        ret.put("message", "success");
+        return ret;
+
+    }
+
 }
