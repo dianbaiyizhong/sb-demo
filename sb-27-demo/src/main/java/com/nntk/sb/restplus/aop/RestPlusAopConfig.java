@@ -11,7 +11,7 @@ import com.nntk.sb.restplus.RespBodyHandleRule;
 import com.nntk.sb.restplus.annotation.FormData;
 import com.nntk.sb.restplus.annotation.RestPlus;
 import com.nntk.sb.restplus.returntype.Call;
-import com.nntk.sb.restplus.returntype.Void;
+import com.nntk.sb.restplus.returntype.RestPlusVoid;
 import com.nntk.sb.restplus.strategy.HttpRequestBaseHandler;
 import com.nntk.sb.restplus.strategy.HttpRequestSelector;
 import com.nntk.sb.restplus.util.HttpRespObserver;
@@ -83,7 +83,7 @@ public class RestPlusAopConfig {
         // 获取返回类型
         Type genericReturnType = method.getGenericReturnType();
         if (genericReturnType == Void.class) {
-            Void vo = new Void();
+            RestPlusVoid vo = new RestPlusVoid();
             try {
                 HttpPlusResponse response = select.execute(joinPoint, httpFactory);
                 vo.setHttpStatus(response.getHttpStatus());

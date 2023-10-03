@@ -2,9 +2,11 @@ package com.nntk.sb.restplus.strategy;
 
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.extra.spring.SpringUtil;
 import com.nntk.sb.restplus.AbsHttpFactory;
 import com.nntk.sb.restplus.HttpPlusResponse;
 import com.nntk.sb.restplus.annotation.*;
+import com.nntk.sb.restplus.intercept.ParamHandleIntercept;
 import com.nntk.sb.restplus.util.RestAnnotationUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.CodeSignature;
@@ -16,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class HttpRequestBaseHandler {
-
 
     public HttpPlusResponse execute(ProceedingJoinPoint joinPoint, AbsHttpFactory httpFactory) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
@@ -66,13 +67,23 @@ public abstract class HttpRequestBaseHandler {
 
         String formatUrl = StrFormatter.format(url, pathMap, false);
 
-
-        return executeHttp(HttpExecuteContext.builder()
+        HttpExecuteContext context = HttpExecuteContext.builder()
                 .url(formatUrl)
                 .bodyMap(requestBody)
                 .headerMap(headerMap)
                 .httpFactory(httpFactory)
-                .build());
+                .build();
+        // 拦截器模式
+
+        Class<? extends ParamHandleIntercept>[] interceptList = RestAnnotationUtil.getObject(clazz, Intercept.class, "classType");
+
+        for (Class<? extends ParamHandleIntercept> object : interceptList) {
+            ParamHandleIntercept handleIntercept = SpringUtil.getBean(object);
+            context = handleIntercept.handle(context);
+        }
+
+        // 模板方法模式
+        return executeHttp(context);
     }
 
 
