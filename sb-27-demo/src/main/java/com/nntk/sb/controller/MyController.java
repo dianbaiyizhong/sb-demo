@@ -70,7 +70,10 @@ public class MyController {
     public Object register() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", "sss");
-        myApi.register(paramMap);
+
+        Map<String, String> header = new HashMap<>();
+        header.put("TenantId", "hello header");
+        myApi.register(paramMap, header);
         return "success";
     }
 

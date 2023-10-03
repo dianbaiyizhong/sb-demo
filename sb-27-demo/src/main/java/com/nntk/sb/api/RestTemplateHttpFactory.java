@@ -64,12 +64,12 @@ public class RestTemplateHttpFactory extends AbsHttpFactory {
 
 
     @Override
-    public HttpPlusResponse put(String url, Map<String, String> headerMap, String body) {
+    public HttpPlusResponse put(String url, Map<String, String> headerMap,  Map<String, Object> body) {
         return null;
     }
 
     @Override
-    public HttpPlusResponse delete(String url, Map<String, String> headerMap, String body) {
+    public HttpPlusResponse delete(String url, Map<String, String> headerMap, Map<String, Object> body) {
         return null;
     }
 

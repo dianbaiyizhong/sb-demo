@@ -32,7 +32,7 @@ public interface MyApi extends MyBaseApi {
 
     @FormData
     @POST(url = "/register")
-    Void register(@Body Map<String, Object> map);
+    Void register(@Body Map<String, Object> map, @Header Map<String, String> headerMap);
 
     @FormData
     @POST(url = "/upload")
