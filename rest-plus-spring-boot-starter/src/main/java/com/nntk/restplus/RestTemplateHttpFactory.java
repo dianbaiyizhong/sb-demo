@@ -1,7 +1,5 @@
-package com.nntk.sb.api;
+package com.nntk.restplus;
 
-import com.alibaba.fastjson2.JSON;
-import com.google.common.collect.Lists;
 import com.nntk.restplus.abs.AbsHttpFactory;
 import com.nntk.restplus.entity.RestPlusResponse;
 import com.nntk.restplus.strategy.HttpExecuteContext;
@@ -13,7 +11,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -45,7 +45,7 @@ public class RestTemplateHttpFactory extends AbsHttpFactory {
             responseEntity = restTemplate.postForEntity(context.getUrl(), entity, String.class);
 
         } else {
-            HttpEntity<String> entity = new HttpEntity<>(JSON.toJSONString(context.getBodyMap()), headers);
+            HttpEntity<String> entity = new HttpEntity<>(context.getHttpFactory().toJsonString(context.getBodyMap()), headers);
             responseEntity = restTemplate.postForEntity(context.getUrl(), entity, String.class);
         }
         RestPlusResponse restPlusResponse = new RestPlusResponse();
@@ -87,8 +87,13 @@ public class RestTemplateHttpFactory extends AbsHttpFactory {
 
     private static MultiValueMap<String, Object> map2MultiValueMap(Map<String, Object> params) {
         MultiValueMap<String, Object> multiValueMap = new LinkedMultiValueMap<>();
-        for (Map.Entry<String, Object> entry : params.entrySet())
-            multiValueMap.put(entry.getKey(), Lists.newArrayList(entry.getValue()));
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+
+            List<Object> list = new ArrayList<>();
+            list.add(entry.getValue());
+            multiValueMap.put(entry.getKey(), list);
+
+        }
         return multiValueMap;
     }
 

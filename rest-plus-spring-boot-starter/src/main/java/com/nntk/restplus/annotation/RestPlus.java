@@ -1,5 +1,6 @@
 package com.nntk.restplus.annotation;
 
+import com.nntk.restplus.RestTemplateHttpFactory;
 import com.nntk.restplus.abs.AbsHttpFactory;
 import com.nntk.restplus.abs.AbsBasicRespObserver;
 import com.nntk.restplus.abs.AbsBodyHandleRule;
@@ -16,6 +17,6 @@ public @interface RestPlus {
 
     Class<? extends AbsBasicRespObserver> observe() default AbsBasicRespObserver.class;
 
-    Class<? extends AbsHttpFactory> httpFactory() default AbsHttpFactory.class;
+    Class<? extends AbsHttpFactory> httpFactory() default RestTemplateHttpFactory.class;
 
 }
