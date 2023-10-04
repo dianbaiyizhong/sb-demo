@@ -1,6 +1,6 @@
 package com.nntk.sb.controller;
 
-import com.nntk.sb.api.DefaultResultObserver;
+import com.nntk.sb.api.DefaultResultObserverAbs;
 import com.nntk.sb.api.my.MyApi;
 import com.nntk.sb.api.my.MyBodyEntity;
 import com.nntk.sb.api.my.UserInfo;
@@ -48,7 +48,7 @@ public class MyController {
     public Object login2() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sex", "男");
-        myApi.login2(paramMap).observe(new DefaultResultObserver() {
+        myApi.login2(paramMap).observe(new DefaultResultObserverAbs() {
             @Override
             public void complete() {
                 super.complete();

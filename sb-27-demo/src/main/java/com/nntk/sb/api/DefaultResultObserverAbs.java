@@ -1,6 +1,6 @@
 package com.nntk.sb.api;
 
-import com.nntk.restplus.BasicRespObserver;
+import com.nntk.restplus.abs.AbsBasicRespObserver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class DefaultResultObserver extends BasicRespObserver {
+public class DefaultResultObserverAbs extends AbsBasicRespObserver {
     @Override
     public void callBusinessFail(int code, String messages) {
         log.info("callBusinessFail...");

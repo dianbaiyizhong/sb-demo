@@ -1,6 +1,7 @@
-package com.nntk.restplus.aop;
+package com.nntk.restplus;
 
 import com.nntk.restplus.annotation.RestPlus;
+import com.nntk.restplus.aop.RestPlusAopProxyFactory;
 import com.nntk.restplus.util.ResourceUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -39,7 +40,7 @@ public class RestPlusConfigScanner implements BeanDefinitionRegistryPostProcesso
                 }
             }
         } catch (ClassNotFoundException ex) {
-            // Swallow and continue
+            ex.printStackTrace();
         }
         return null;
     }

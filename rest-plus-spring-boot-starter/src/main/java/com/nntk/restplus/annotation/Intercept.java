@@ -1,6 +1,6 @@
 package com.nntk.restplus.annotation;
 
-import com.nntk.restplus.intercept.ParamHandleIntercept;
+import com.nntk.restplus.intercept.RestPlusHandleIntercept;
 
 import java.lang.annotation.*;
 
@@ -9,6 +9,6 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Intercept {
 
-    Class<? extends ParamHandleIntercept>[] classType() default {};
+    Class<? extends RestPlusHandleIntercept>[] classType() default {};
 
 }

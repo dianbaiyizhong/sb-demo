@@ -4,8 +4,8 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
-import com.nntk.restplus.AbsHttpFactory;
-import com.nntk.restplus.RestPlusResponse;
+import com.nntk.restplus.abs.AbsHttpFactory;
+import com.nntk.restplus.entity.RestPlusResponse;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;

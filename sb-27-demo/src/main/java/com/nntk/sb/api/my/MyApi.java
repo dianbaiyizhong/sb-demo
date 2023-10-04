@@ -9,7 +9,7 @@ import java.util.Map;
 
 @RestPlus(
         baseUrl = "http://localhost:8080",
-        respHandler = MyRespBodyHandleRule.class
+        respHandler = MyAbsBodyHandleRule.class
 )
 @Intercept(classType = {MyIntercept.class, MyIntercept2.class})
 public interface MyApi extends MyBaseApi {

@@ -1,7 +1,7 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.nntk.restplus.aop.RestPlusConfigScanner,\
+  com.nntk.restplus.RestPlusConfigScanner,\
   com.nntk.restplus.aop.RestPlusAopConfig,\
   com.nntk.restplus.strategy.GetRequestHandler,\
   com.nntk.restplus.strategy.PostRequestHandler,\
   com.nntk.restplus.strategy.HttpRequestSelector,\
-  com.nntk.restplus.util.SpringContextUtil
+  com.nntk.restplus.util.SpringUtil

@@ -3,11 +3,11 @@ package com.nntk.sb.api.my;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.nntk.restplus.RespBodyHandleRule;
+import com.nntk.restplus.abs.AbsBodyHandleRule;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MyRespBodyHandleRule extends RespBodyHandleRule {
+public class MyAbsBodyHandleRule extends AbsBodyHandleRule {
 
     private JSONObject jsonObject;
 

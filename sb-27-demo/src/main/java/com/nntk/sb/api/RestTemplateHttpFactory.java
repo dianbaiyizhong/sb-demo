@@ -2,8 +2,8 @@ package com.nntk.sb.api;
 
 import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;
-import com.nntk.restplus.AbsHttpFactory;
-import com.nntk.restplus.RestPlusResponse;
+import com.nntk.restplus.abs.AbsHttpFactory;
+import com.nntk.restplus.entity.RestPlusResponse;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

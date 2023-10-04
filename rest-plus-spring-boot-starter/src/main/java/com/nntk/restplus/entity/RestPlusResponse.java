@@ -1,4 +1,4 @@
-package com.nntk.restplus;
+package com.nntk.restplus.entity;
 
 
 public class RestPlusResponse {

@@ -1,9 +1,9 @@
 package com.nntk.restplus.aop;
 
-import com.nntk.restplus.AbsHttpFactory;
-import com.nntk.restplus.BasicRespObserver;
-import com.nntk.restplus.RestPlusResponse;
-import com.nntk.restplus.RespBodyHandleRule;
+import com.nntk.restplus.abs.AbsHttpFactory;
+import com.nntk.restplus.abs.AbsBasicRespObserver;
+import com.nntk.restplus.entity.RestPlusResponse;
+import com.nntk.restplus.abs.AbsBodyHandleRule;
 import com.nntk.restplus.annotation.FormData;
 import com.nntk.restplus.annotation.RestPlus;
 import com.nntk.restplus.returntype.Call;
@@ -52,12 +52,12 @@ public class RestPlusAopConfig {
 
 
         // 获取定义的结果判断逻辑和处理逻辑
-        Class<RespBodyHandleRule> respHandlerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "respHandler");
-        Class<BasicRespObserver> observerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "observe");
+        Class<AbsBodyHandleRule> respHandlerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "respHandler");
+        Class<AbsBasicRespObserver> observerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "observe");
 
 
-        RespBodyHandleRule handler = SpringContextUtil.getBean(respHandlerClass);
-        BasicRespObserver observer = SpringContextUtil.getBean(observerClass);
+        AbsBodyHandleRule handler = SpringUtil.getBean(respHandlerClass);
+        AbsBasicRespObserver observer = SpringUtil.getBean(observerClass);
 
 
         Annotation requestTypeAnnotation = Arrays.stream(method.getAnnotations()).filter(annotationValue -> httpRequestSelector.isRequestType(annotationValue.annotationType())).findAny().get();
@@ -67,7 +67,7 @@ public class RestPlusAopConfig {
 
         // 获取http 工厂类
         Class<AbsHttpFactory> httpFactoryClass = AnnotationUtil.getObject(clazz, RestPlus.class, "httpFactory");
-        AbsHttpFactory httpFactory = SpringContextUtil.getBean(httpFactoryClass);
+        AbsHttpFactory httpFactory = SpringUtil.getBean(httpFactoryClass);
 
         boolean isFormData = Arrays.stream(method.getAnnotations()).anyMatch(annotation -> annotation.annotationType() == FormData.class);
 

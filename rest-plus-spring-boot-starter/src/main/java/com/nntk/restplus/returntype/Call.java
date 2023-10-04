@@ -1,8 +1,8 @@
 package com.nntk.restplus.returntype;
 
-import com.nntk.restplus.AbsHttpFactory;
-import com.nntk.restplus.BasicRespObserver;
-import com.nntk.restplus.RespBodyHandleRule;
+import com.nntk.restplus.abs.AbsHttpFactory;
+import com.nntk.restplus.abs.AbsBasicRespObserver;
+import com.nntk.restplus.abs.AbsBodyHandleRule;
 import com.nntk.restplus.util.HttpRespObserver;
 
 
@@ -31,25 +31,25 @@ public class Call<T> {
 
     private Throwable throwable;
 
-    public BasicRespObserver getConfigObserver() {
+    public AbsBasicRespObserver getConfigObserver() {
         return configObserver;
     }
 
-    public void setConfigObserver(BasicRespObserver configObserver) {
+    public void setConfigObserver(AbsBasicRespObserver configObserver) {
         this.configObserver = configObserver;
     }
 
-    public RespBodyHandleRule getRespBodyHandleRule() {
-        return respBodyHandleRule;
+    public AbsBodyHandleRule getRespBodyHandleRule() {
+        return absBodyHandleRule;
     }
 
-    public void setRespBodyHandleRule(RespBodyHandleRule respBodyHandleRule) {
-        this.respBodyHandleRule = respBodyHandleRule;
+    public void setRespBodyHandleRule(AbsBodyHandleRule absBodyHandleRule) {
+        this.absBodyHandleRule = absBodyHandleRule;
     }
 
-    private BasicRespObserver configObserver;
+    private AbsBasicRespObserver configObserver;
 
-    private RespBodyHandleRule respBodyHandleRule;
+    private AbsBodyHandleRule absBodyHandleRule;
 
     public void setReturnType(Type returnType) {
         this.returnType = returnType;
@@ -70,9 +70,9 @@ public class Call<T> {
     private AbsHttpFactory httpFactory;
 
 
-    public Call<T> observe(BasicRespObserver observer) {
+    public Call<T> observe(AbsBasicRespObserver observer) {
         isObserve = true;
-        HttpRespObserver.observe(observer, throwable, httpStatus, respBodyHandleRule);
+        HttpRespObserver.observe(observer, throwable, httpStatus, absBodyHandleRule);
         return this;
     }
 
@@ -80,7 +80,7 @@ public class Call<T> {
         if (!isObserve) {
             observe(configObserver);
         }
-        String data = respBodyHandleRule.getHttpBody();
+        String data = absBodyHandleRule.getHttpBody();
         return httpFactory.parseObject(data, returnType);
     }
 
@@ -88,7 +88,7 @@ public class Call<T> {
         if (!isObserve) {
             observe(configObserver);
         }
-        String data = respBodyHandleRule.getData();
+        String data = absBodyHandleRule.getData();
         return httpFactory.parseObject(data, returnType);
     }
 

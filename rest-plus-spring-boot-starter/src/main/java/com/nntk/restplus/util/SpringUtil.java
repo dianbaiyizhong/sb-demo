@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
  * spring 的工具类，可以查看bean
  */
 @Component
-public class SpringContextUtil implements ApplicationContextAware {
+public class SpringUtil implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext = null;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (SpringContextUtil.applicationContext == null) {
-            SpringContextUtil.applicationContext = applicationContext;
+        if (SpringUtil.applicationContext == null) {
+            SpringUtil.applicationContext = applicationContext;
         }
 
     }

@@ -1,13 +1,13 @@
 package com.nntk.restplus.strategy;
 
 
-import com.nntk.restplus.AbsHttpFactory;
-import com.nntk.restplus.RestPlusResponse;
+import com.nntk.restplus.abs.AbsHttpFactory;
+import com.nntk.restplus.entity.RestPlusResponse;
 import com.nntk.restplus.annotation.*;
-import com.nntk.restplus.intercept.ParamHandleIntercept;
+import com.nntk.restplus.intercept.RestPlusHandleIntercept;
 import com.nntk.restplus.util.AnnotationUtil;
 import com.nntk.restplus.util.GenericBuilder;
-import com.nntk.restplus.util.SpringContextUtil;
+import com.nntk.restplus.util.SpringUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -85,10 +85,10 @@ public abstract class HttpRequestBaseHandler {
                 .with(HttpExecuteContext::setHttpFactory,httpFactory)
                 .build();
         // 拦截器模式
-        Class<? extends ParamHandleIntercept>[] interceptList = AnnotationUtil.getObject(clazz, Intercept.class, "classType");
+        Class<? extends RestPlusHandleIntercept>[] interceptList = AnnotationUtil.getObject(clazz, Intercept.class, "classType");
 
-        for (Class<? extends ParamHandleIntercept> object : interceptList) {
-            ParamHandleIntercept handleIntercept = SpringContextUtil.getBean(object);
+        for (Class<? extends RestPlusHandleIntercept> object : interceptList) {
+            RestPlusHandleIntercept handleIntercept = SpringUtil.getBean(object);
             context = handleIntercept.handle(context);
         }
 

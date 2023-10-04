@@ -1,6 +1,6 @@
 package com.nntk.restplus.strategy;
 
-import com.nntk.restplus.AbsHttpFactory;
+import com.nntk.restplus.abs.AbsHttpFactory;
 
 import java.util.Map;
 

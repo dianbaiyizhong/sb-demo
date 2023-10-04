@@ -5,9 +5,6 @@ import java.lang.reflect.Type;
 
 public class TypeUtil {
 
-
-
-
     public static ParameterizedType toParameterizedType(Type type) {
 
         return (ParameterizedType) type;

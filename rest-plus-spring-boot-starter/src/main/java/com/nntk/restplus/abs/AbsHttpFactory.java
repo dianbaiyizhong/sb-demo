@@ -1,5 +1,7 @@
-package com.nntk.restplus;
+package com.nntk.restplus.abs;
 
+
+import com.nntk.restplus.entity.RestPlusResponse;
 
 import java.lang.reflect.Type;
 import java.util.Map;

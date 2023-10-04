@@ -1,6 +1,6 @@
-package com.nntk.restplus;
+package com.nntk.restplus.abs;
 
-public abstract class BasicRespObserver {
+public abstract class AbsBasicRespObserver {
 
     /**
      * 业务异常，也就是所谓的code不等于0
