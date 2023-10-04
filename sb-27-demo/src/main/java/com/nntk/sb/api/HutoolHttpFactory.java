@@ -5,7 +5,7 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.nntk.restplus.AbsHttpFactory;
-import com.nntk.restplus.HttpPlusResponse;
+import com.nntk.restplus.RestPlusResponse;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -29,31 +29,31 @@ public class HutoolHttpFactory extends AbsHttpFactory {
     }
 
     @Override
-    public HttpPlusResponse post(String url, Map<String, String> header, Map<String, Object> bodyMap) {
+    public RestPlusResponse post(String url, Map<String, String> header, Map<String, Object> bodyMap) {
         HttpRequest httpRequest = HttpUtil.createPost(url);
         httpRequest.body(JSON.toJSONString(bodyMap));
         if (header != null) {
             httpRequest.addHeaders(header);
         }
         HttpResponse response = httpRequest.execute();
-        HttpPlusResponse httpPlusResponse = new HttpPlusResponse();
-        httpPlusResponse.setHttpStatus(response.getStatus());
-        httpPlusResponse.setBody(response.body());
-        return httpPlusResponse;
+        RestPlusResponse restPlusResponse = new RestPlusResponse();
+        restPlusResponse.setHttpStatus(response.getStatus());
+        restPlusResponse.setBody(response.body());
+        return restPlusResponse;
     }
 
     @Override
-    public HttpPlusResponse put(String url, Map<String, String> headerMap, Map<String, Object> body) {
+    public RestPlusResponse put(String url, Map<String, String> headerMap, Map<String, Object> body) {
         return null;
     }
 
     @Override
-    public HttpPlusResponse delete(String url, Map<String, String> headerMap, Map<String, Object> body) {
+    public RestPlusResponse delete(String url, Map<String, String> headerMap, Map<String, Object> body) {
         return null;
     }
 
     @Override
-    public HttpPlusResponse get(String url, Map<String, String> header) {
+    public RestPlusResponse get(String url, Map<String, String> header) {
         return null;
     }
 }

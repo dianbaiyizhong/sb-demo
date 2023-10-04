@@ -3,7 +3,7 @@ package com.nntk.sb.api;
 import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;
 import com.nntk.restplus.AbsHttpFactory;
-import com.nntk.restplus.HttpPlusResponse;
+import com.nntk.restplus.RestPlusResponse;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -30,7 +30,7 @@ public class RestTemplateHttpFactory extends AbsHttpFactory {
     }
 
     @Override
-    public HttpPlusResponse post(String url, Map<String, String> headerMap, Map<String, Object> bodyMap) {
+    public RestPlusResponse post(String url, Map<String, String> headerMap, Map<String, Object> bodyMap) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(getContentType()));
@@ -48,10 +48,10 @@ public class RestTemplateHttpFactory extends AbsHttpFactory {
             HttpEntity<String> entity = new HttpEntity<>(JSON.toJSONString(bodyMap), headers);
             responseEntity = restTemplate.postForEntity(url, entity, String.class);
         }
-        HttpPlusResponse httpPlusResponse = new HttpPlusResponse();
-        httpPlusResponse.setHttpStatus(responseEntity.getStatusCodeValue());
-        httpPlusResponse.setBody(responseEntity.getBody());
-        return httpPlusResponse;
+        RestPlusResponse restPlusResponse = new RestPlusResponse();
+        restPlusResponse.setHttpStatus(responseEntity.getStatusCodeValue());
+        restPlusResponse.setBody(responseEntity.getBody());
+        return restPlusResponse;
     }
 
     private static MultiValueMap<String, Object> map2MultiValueMap(Map<String, Object> params) {
@@ -64,22 +64,22 @@ public class RestTemplateHttpFactory extends AbsHttpFactory {
 
 
     @Override
-    public HttpPlusResponse put(String url, Map<String, String> headerMap,  Map<String, Object> body) {
+    public RestPlusResponse put(String url, Map<String, String> headerMap, Map<String, Object> body) {
         return null;
     }
 
     @Override
-    public HttpPlusResponse delete(String url, Map<String, String> headerMap, Map<String, Object> body) {
+    public RestPlusResponse delete(String url, Map<String, String> headerMap, Map<String, Object> body) {
         return null;
     }
 
     @Override
-    public HttpPlusResponse get(String url, Map<String, String> header) {
+    public RestPlusResponse get(String url, Map<String, String> header) {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
-        HttpPlusResponse httpPlusResponse = new HttpPlusResponse();
-        httpPlusResponse.setHttpStatus(responseEntity.getStatusCodeValue());
-        httpPlusResponse.setBody(responseEntity.getBody());
-        return httpPlusResponse;
+        RestPlusResponse restPlusResponse = new RestPlusResponse();
+        restPlusResponse.setHttpStatus(responseEntity.getStatusCodeValue());
+        restPlusResponse.setBody(responseEntity.getBody());
+        return restPlusResponse;
     }
 }

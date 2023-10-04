@@ -2,7 +2,7 @@ package com.nntk.restplus.aop;
 
 import com.nntk.restplus.AbsHttpFactory;
 import com.nntk.restplus.BasicRespObserver;
-import com.nntk.restplus.HttpPlusResponse;
+import com.nntk.restplus.RestPlusResponse;
 import com.nntk.restplus.RespBodyHandleRule;
 import com.nntk.restplus.annotation.FormData;
 import com.nntk.restplus.annotation.RestPlus;
@@ -11,12 +11,13 @@ import com.nntk.restplus.returntype.RestPlusVoid;
 import com.nntk.restplus.strategy.HttpRequestBaseHandler;
 import com.nntk.restplus.strategy.HttpRequestSelector;
 import com.nntk.restplus.util.*;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
@@ -26,17 +27,19 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
+
 @Component
 @Aspect
-@Slf4j
 public class RestPlusAopConfig {
 
+    private static final Logger log = LoggerFactory.getLogger(RestPlusAopConfig.class);
 
     @Resource
     private HttpRequestSelector httpRequestSelector;
 
     @Pointcut("execution(@com.nntk.restplus.annotation.* * *(..))")
     public void execute() {
+
 
     }
 
@@ -63,7 +66,7 @@ public class RestPlusAopConfig {
 
 
         // 获取http 工厂类
-        Class<AbsHttpFactory> httpFactoryClass = RestAnnotationUtil.getObject(clazz, RestPlus.class, "httpFactory");
+        Class<AbsHttpFactory> httpFactoryClass = AnnotationUtil.getObject(clazz, RestPlus.class, "httpFactory");
         AbsHttpFactory httpFactory = SpringContextUtil.getBean(httpFactoryClass);
 
         boolean isFormData = Arrays.stream(method.getAnnotations()).anyMatch(annotation -> annotation.annotationType() == FormData.class);
@@ -83,7 +86,7 @@ public class RestPlusAopConfig {
         if (genericReturnType == Void.class) {
             RestPlusVoid vo = new RestPlusVoid();
             try {
-                HttpPlusResponse response = select.execute(joinPoint, httpFactory);
+                RestPlusResponse response = select.execute(joinPoint, httpFactory);
                 vo.setHttpStatus(response.getHttpStatus());
                 handler.setHttpBody(response.getBody());
             } catch (Exception e) {
@@ -99,10 +102,10 @@ public class RestPlusAopConfig {
         } else {
             Call<Object> call = new Call<>();
             try {
-                HttpPlusResponse response = select.execute(joinPoint, httpFactory);
+                RestPlusResponse response = select.execute(joinPoint, httpFactory);
                 Type type = method.getGenericReturnType();
                 Type typeArgument = TypeUtil.toParameterizedType(type).getActualTypeArguments()[0];
-                call.setRetureType(typeArgument);
+                call.setReturnType(typeArgument);
                 call.setHttpStatus(response.getHttpStatus());
                 handler.setHttpBody(response.getBody());
             } catch (Exception e) {

@@ -2,11 +2,11 @@ package com.nntk.restplus.strategy;
 
 
 import com.nntk.restplus.AbsHttpFactory;
-import com.nntk.restplus.HttpPlusResponse;
+import com.nntk.restplus.RestPlusResponse;
 import com.nntk.restplus.annotation.*;
 import com.nntk.restplus.intercept.ParamHandleIntercept;
 import com.nntk.restplus.util.AnnotationUtil;
-import com.nntk.restplus.util.RestAnnotationUtil;
+import com.nntk.restplus.util.GenericBuilder;
 import com.nntk.restplus.util.SpringContextUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.CodeSignature;
@@ -28,11 +28,11 @@ public abstract class HttpRequestBaseHandler {
 
     private Class<? extends Annotation>  requestType;
 
-    public HttpPlusResponse execute(ProceedingJoinPoint joinPoint, AbsHttpFactory httpFactory) {
+    public RestPlusResponse execute(ProceedingJoinPoint joinPoint, AbsHttpFactory httpFactory) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Class<?> clazz = method.getDeclaringClass();
         // 解析base url
-        String baseUrl = RestAnnotationUtil.getValue(clazz, RestPlus.class, "baseUrl");
+        String baseUrl = AnnotationUtil.getValue(clazz, RestPlus.class, "baseUrl");
 
         String childUrl = AnnotationUtil.getAnnotationValue(method, requestType, "url");
         String url = baseUrl + childUrl;
@@ -78,15 +78,14 @@ public abstract class HttpRequestBaseHandler {
 
         String formatUrl = parseTemplate(url, pathMap);
 
-        HttpExecuteContext context = HttpExecuteContext.builder()
-                .url(formatUrl)
-                .bodyMap(requestBody)
-                .headerMap(headerMap)
-                .httpFactory(httpFactory)
+        HttpExecuteContext context = GenericBuilder.of(HttpExecuteContext::new)
+                .with(HttpExecuteContext::setUrl,formatUrl)
+                .with(HttpExecuteContext::setBodyMap,requestBody)
+                .with(HttpExecuteContext::setHeaderMap,headerMap)
+                .with(HttpExecuteContext::setHttpFactory,httpFactory)
                 .build();
         // 拦截器模式
-
-        Class<? extends ParamHandleIntercept>[] interceptList = RestAnnotationUtil.getObject(clazz, Intercept.class, "classType");
+        Class<? extends ParamHandleIntercept>[] interceptList = AnnotationUtil.getObject(clazz, Intercept.class, "classType");
 
         for (Class<? extends ParamHandleIntercept> object : interceptList) {
             ParamHandleIntercept handleIntercept = SpringContextUtil.getBean(object);
@@ -98,7 +97,7 @@ public abstract class HttpRequestBaseHandler {
     }
 
 
-    public abstract HttpPlusResponse executeHttp(HttpExecuteContext context);
+    public abstract RestPlusResponse executeHttp(HttpExecuteContext context);
 
 
 

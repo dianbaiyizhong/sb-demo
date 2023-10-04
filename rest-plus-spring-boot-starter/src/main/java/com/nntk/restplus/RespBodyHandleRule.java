@@ -1,16 +1,8 @@
 package com.nntk.restplus;
 
-import lombok.Getter;
 
-@Getter
 public abstract class RespBodyHandleRule {
-
-    public void setHttpBody(String httpBody) {
-        this.httpBody = httpBody;
-    }
-
     private String httpBody;
-
     public abstract void init(String httpBody);
     public abstract int getCode();
 
@@ -20,5 +12,15 @@ public abstract class RespBodyHandleRule {
     public abstract String getMessage();
 
     public abstract String getData();
+
+    public void setHttpBody(String httpBody) {
+        this.httpBody = httpBody;
+    }
+
+    public String getHttpBody() {
+        return httpBody;
+    }
+
+
 
 }
