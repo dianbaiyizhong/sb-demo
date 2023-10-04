@@ -1,8 +1,8 @@
 package com.nntk.restplus.util;
 
-import cn.hutool.http.HttpStatus;
 import com.nntk.restplus.RespBodyHandleRule;
 import com.nntk.restplus.BasicRespObserver;
+import org.springframework.http.HttpStatus;
 
 public class HttpRespObserver {
 
@@ -14,7 +14,7 @@ public class HttpRespObserver {
         if (throwable != null) {
             observer.callUnknownException(throwable);
         } else {
-            if (httpStatus != HttpStatus.HTTP_OK) {
+            if (httpStatus != HttpStatus.OK.value()) {
                 observer.callHttpFail(httpStatus, respBodyHandleRule.getHttpBody());
             } else {
                 observer.callHttpSuccess();

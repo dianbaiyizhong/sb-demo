@@ -1,8 +1,7 @@
 package com.nntk.restplus.util;
 
-import cn.hutool.core.annotation.AnnotationUtil;
-import cn.hutool.core.util.StrUtil;
 import com.nntk.restplus.annotation.RestPlus;
+import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
 
@@ -26,6 +25,7 @@ public class RestAnnotationUtil {
 
     }
 
+
     public static String getValue(Class<?> clazz, Class<? extends Annotation> annotation, String name) {
 
         String baseUrl = AnnotationUtil.getAnnotationValue(clazz, annotation, name);
@@ -33,7 +33,7 @@ public class RestAnnotationUtil {
         // 遍历继承关系，获取到对应的值
         for (Class<?> i : is) {
             String value = AnnotationUtil.getAnnotationValue(i, RestPlus.class, name);
-            if (StrUtil.isNotEmpty(value)) {
+            if (StringUtils.hasLength(value)) {
                 baseUrl = value;
                 break;
             }

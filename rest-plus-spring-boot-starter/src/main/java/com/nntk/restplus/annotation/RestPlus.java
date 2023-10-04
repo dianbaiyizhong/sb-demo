@@ -1,8 +1,9 @@
 package com.nntk.restplus.annotation;
 
-import com.nntk.restplus.RespBodyHandleRule;
-import com.nntk.restplus.BasicRespObserver;
 import com.nntk.restplus.AbsHttpFactory;
+import com.nntk.restplus.BasicRespObserver;
+import com.nntk.restplus.RespBodyHandleRule;
+import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
 

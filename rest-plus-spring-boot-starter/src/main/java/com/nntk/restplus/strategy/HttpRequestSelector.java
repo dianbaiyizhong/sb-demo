@@ -35,7 +35,9 @@ public class HttpRequestSelector {
     }
 
     public HttpRequestBaseHandler select(Class<? extends Annotation> type) {
-        return requestTypeMap.get(type);
+        HttpRequestBaseHandler handler = requestTypeMap.get(type);
+        handler.setRequestType(type);
+        return handler;
     }
 
 }

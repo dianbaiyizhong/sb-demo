@@ -75,6 +75,11 @@ public class RestTemplateHttpFactory extends AbsHttpFactory {
 
     @Override
     public HttpPlusResponse get(String url, Map<String, String> header) {
-        return null;
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        HttpPlusResponse httpPlusResponse = new HttpPlusResponse();
+        httpPlusResponse.setHttpStatus(responseEntity.getStatusCodeValue());
+        httpPlusResponse.setBody(responseEntity.getBody());
+        return httpPlusResponse;
     }
 }

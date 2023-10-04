@@ -1,23 +1,32 @@
 package com.nntk.restplus.strategy;
 
-import cn.hutool.core.annotation.AnnotationUtil;
-import cn.hutool.core.text.StrFormatter;
-import cn.hutool.extra.spring.SpringUtil;
+
 import com.nntk.restplus.AbsHttpFactory;
 import com.nntk.restplus.HttpPlusResponse;
 import com.nntk.restplus.annotation.*;
 import com.nntk.restplus.intercept.ParamHandleIntercept;
+import com.nntk.restplus.util.AnnotationUtil;
 import com.nntk.restplus.util.RestAnnotationUtil;
+import com.nntk.restplus.util.SpringContextUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class HttpRequestBaseHandler {
+
+    public void setRequestType(Class<? extends Annotation> requestType) {
+        this.requestType = requestType;
+    }
+
+    private Class<? extends Annotation>  requestType;
 
     public HttpPlusResponse execute(ProceedingJoinPoint joinPoint, AbsHttpFactory httpFactory) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
@@ -25,7 +34,7 @@ public abstract class HttpRequestBaseHandler {
         // 解析base url
         String baseUrl = RestAnnotationUtil.getValue(clazz, RestPlus.class, "baseUrl");
 
-        String childUrl = AnnotationUtil.getAnnotationValue(method, POST.class, "url");
+        String childUrl = AnnotationUtil.getAnnotationValue(method, requestType, "url");
         String url = baseUrl + childUrl;
 
         String[] paramNames = ((CodeSignature) joinPoint.getSignature()).getParameterNames();
@@ -39,7 +48,7 @@ public abstract class HttpRequestBaseHandler {
         Parameter[] parameters = method.getParameters();
         Map<String, String> pathMap = new HashMap<>();
         for (Parameter parameter : parameters) {
-            String value = AnnotationUtil.getAnnotationValue(parameter, Path.class);
+            String value = AnnotationUtil.getAnnotationValue(parameter, Path.class, "value");
             if (value != null) {
                 if (paramMap.containsKey(parameter.getName())) {
                     pathMap.put(value, paramMap.get(parameter.getName()).toString());
@@ -53,19 +62,21 @@ public abstract class HttpRequestBaseHandler {
         Map<String, String> headerMap = null;
 
         for (Parameter parameter : parameters) {
-            Object body = AnnotationUtil.getAnnotation(parameter, Body.class);
-            Object header = AnnotationUtil.getAnnotation(parameter, Header.class);
 
-            if (body != null) {
+
+            boolean body = AnnotationUtil.hasAnnotation(parameter, Body.class);
+            boolean header = AnnotationUtil.hasAnnotation(parameter, Header.class);
+
+            if (body) {
                 requestBody = (Map<String, Object>) paramMap.get(parameter.getName());
             }
-            if (header != null) {
+            if (header) {
                 headerMap = (Map<String, String>) paramMap.get(parameter.getName());
             }
         }
 
 
-        String formatUrl = StrFormatter.format(url, pathMap, false);
+        String formatUrl = parseTemplate(url, pathMap);
 
         HttpExecuteContext context = HttpExecuteContext.builder()
                 .url(formatUrl)
@@ -78,7 +89,7 @@ public abstract class HttpRequestBaseHandler {
         Class<? extends ParamHandleIntercept>[] interceptList = RestAnnotationUtil.getObject(clazz, Intercept.class, "classType");
 
         for (Class<? extends ParamHandleIntercept> object : interceptList) {
-            ParamHandleIntercept handleIntercept = SpringUtil.getBean(object);
+            ParamHandleIntercept handleIntercept = SpringContextUtil.getBean(object);
             context = handleIntercept.handle(context);
         }
 
@@ -89,5 +100,25 @@ public abstract class HttpRequestBaseHandler {
 
     public abstract HttpPlusResponse executeHttp(HttpExecuteContext context);
 
+
+
+    public static String parseTemplate(String template, Map properties) {
+        if (template == null || template.isEmpty() || properties == null) {
+            return template;
+        }
+        String r = "\\{([^\\}]+)\\}";
+        Pattern pattern = Pattern.compile(r);
+        Matcher matcher = pattern.matcher(template);
+        while (matcher.find()) {
+            String group = matcher.group();
+            Object o = properties.get(group.replaceAll(r, "$1"));
+            if (o != null) {
+                template = template.replace(group, String.valueOf(o));
+            } else {
+                template = template.replace(group, "");
+            }
+        }
+        return template;
+    }
 
 }
