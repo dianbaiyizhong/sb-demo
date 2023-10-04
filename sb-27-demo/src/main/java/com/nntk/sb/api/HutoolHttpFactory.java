@@ -6,10 +6,10 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.nntk.restplus.abs.AbsHttpFactory;
 import com.nntk.restplus.entity.RestPlusResponse;
+import com.nntk.restplus.strategy.HttpExecuteContext;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
-import java.util.Map;
 
 /**
  * 工厂模式，实现子产品，底层映射调用
@@ -18,22 +18,23 @@ import java.util.Map;
  */
 @Component
 public class HutoolHttpFactory extends AbsHttpFactory {
+
     @Override
     public String toJsonString(Object object) {
         return JSON.toJSONString(object);
     }
 
     @Override
-    public <T> T parseObject(String json, Type tClass) {
-        return JSON.parseObject(json, tClass);
+    public <T> T parseObject(String json, Type type) {
+        return JSON.parseObject(json, type);
     }
 
     @Override
-    public RestPlusResponse post(String url, Map<String, String> header, Map<String, Object> bodyMap) {
-        HttpRequest httpRequest = HttpUtil.createPost(url);
-        httpRequest.body(JSON.toJSONString(bodyMap));
-        if (header != null) {
-            httpRequest.addHeaders(header);
+    public RestPlusResponse post(HttpExecuteContext context) {
+        HttpRequest httpRequest = HttpUtil.createPost(context.getUrl());
+        httpRequest.body(JSON.toJSONString(context.getBodyMap()));
+        if (context.getHeaderMap() != null) {
+            httpRequest.addHeaders(context.getHeaderMap());
         }
         HttpResponse response = httpRequest.execute();
         RestPlusResponse restPlusResponse = new RestPlusResponse();
@@ -43,17 +44,17 @@ public class HutoolHttpFactory extends AbsHttpFactory {
     }
 
     @Override
-    public RestPlusResponse put(String url, Map<String, String> headerMap, Map<String, Object> body) {
+    public RestPlusResponse put(HttpExecuteContext context) {
         return null;
     }
 
     @Override
-    public RestPlusResponse delete(String url, Map<String, String> headerMap, Map<String, Object> body) {
+    public RestPlusResponse delete(HttpExecuteContext context) {
         return null;
     }
 
     @Override
-    public RestPlusResponse get(String url, Map<String, String> header) {
+    public RestPlusResponse get(HttpExecuteContext context) {
         return null;
     }
 }

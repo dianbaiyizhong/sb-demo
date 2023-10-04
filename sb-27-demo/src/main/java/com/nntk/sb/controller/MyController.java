@@ -87,4 +87,11 @@ public class MyController {
         myApi.upload(paramMap);
         return "success";
     }
+
+
+    @GetMapping("/download")
+    public Object download() {
+        File file = myApi.download("C:\\Users\\hhm\\Downloads\\11\\Capture0011111.png").executeForData();
+        return "success:" + file.length();
+    }
 }

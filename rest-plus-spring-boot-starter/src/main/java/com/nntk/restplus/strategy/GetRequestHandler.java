@@ -11,7 +11,6 @@ public class GetRequestHandler extends HttpRequestBaseHandler {
     @Override
     public RestPlusResponse executeHttp(HttpExecuteContext context) {
         AbsHttpFactory httpFactory = context.getHttpFactory();
-        String url = context.getUrl();
-        return httpFactory.get(url, context.getHeaderMap());
+        return httpFactory.get(context);
     }
 }

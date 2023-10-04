@@ -2,6 +2,7 @@ package com.nntk.restplus.strategy;
 
 import com.nntk.restplus.abs.AbsHttpFactory;
 
+import java.io.File;
 import java.util.Map;
 
 public class HttpExecuteContext {
@@ -10,6 +11,38 @@ public class HttpExecuteContext {
     private Map<String, String> headerMap;
     private Map<String, Object> bodyMap;
     private AbsHttpFactory httpFactory;
+
+
+    public void setDownloadFilePath(File downloadFilePath) {
+        this.downloadFilePath = downloadFilePath;
+    }
+
+    public File getDownloadFilePath() {
+        return downloadFilePath;
+    }
+
+    private File downloadFilePath;
+
+    public boolean isDownload() {
+        return download;
+    }
+
+    public void setDownload(boolean download) {
+        this.download = download;
+    }
+
+    private boolean download = false;
+
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    private String contentType;
 
 
     public String getUrl() {

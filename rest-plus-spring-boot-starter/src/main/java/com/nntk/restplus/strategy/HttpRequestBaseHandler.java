@@ -1,20 +1,21 @@
 package com.nntk.restplus.strategy;
 
 
-import com.nntk.restplus.abs.AbsHttpFactory;
-import com.nntk.restplus.entity.RestPlusResponse;
 import com.nntk.restplus.annotation.*;
+import com.nntk.restplus.entity.RestPlusResponse;
 import com.nntk.restplus.intercept.RestPlusHandleIntercept;
 import com.nntk.restplus.util.AnnotationUtil;
-import com.nntk.restplus.util.GenericBuilder;
 import com.nntk.restplus.util.SpringUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.http.MediaType;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -26,13 +27,23 @@ public abstract class HttpRequestBaseHandler {
         this.requestType = requestType;
     }
 
-    private Class<? extends Annotation>  requestType;
+    private Class<? extends Annotation> requestType;
 
-    public RestPlusResponse execute(ProceedingJoinPoint joinPoint, AbsHttpFactory httpFactory) {
+    public RestPlusResponse execute(ProceedingJoinPoint joinPoint, HttpExecuteContext httpExecuteContext) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Class<?> clazz = method.getDeclaringClass();
         // 解析base url
         String baseUrl = AnnotationUtil.getValue(clazz, RestPlus.class, "baseUrl");
+
+
+        boolean isFormData = Arrays.stream(method.getAnnotations()).anyMatch(annotation -> annotation.annotationType() == FormData.class);
+
+        if (isFormData) {
+            httpExecuteContext.setContentType(MediaType.MULTIPART_FORM_DATA_VALUE);
+        } else {
+            httpExecuteContext.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        }
+
 
         String childUrl = AnnotationUtil.getAnnotationValue(method, requestType, "url");
         String url = baseUrl + childUrl;
@@ -61,44 +72,46 @@ public abstract class HttpRequestBaseHandler {
         Map<String, Object> requestBody = null;
         Map<String, String> headerMap = null;
 
+        File filePath = null;
         for (Parameter parameter : parameters) {
-
-
             boolean body = AnnotationUtil.hasAnnotation(parameter, Body.class);
             boolean header = AnnotationUtil.hasAnnotation(parameter, Header.class);
-
+            boolean isFilePath = AnnotationUtil.hasAnnotation(parameter, FilePath.class);
             if (body) {
                 requestBody = (Map<String, Object>) paramMap.get(parameter.getName());
             }
             if (header) {
                 headerMap = (Map<String, String>) paramMap.get(parameter.getName());
             }
+            if (isFilePath) {
+                if (paramMap.get(parameter.getName()) instanceof File) {
+                    filePath = (File) paramMap.get(parameter.getName());
+                } else {
+                    filePath = new File((String) paramMap.get(parameter.getName()));
+                }
+            }
         }
 
-
+        httpExecuteContext.setDownloadFilePath(filePath);
         String formatUrl = parseTemplate(url, pathMap);
 
-        HttpExecuteContext context = GenericBuilder.of(HttpExecuteContext::new)
-                .with(HttpExecuteContext::setUrl,formatUrl)
-                .with(HttpExecuteContext::setBodyMap,requestBody)
-                .with(HttpExecuteContext::setHeaderMap,headerMap)
-                .with(HttpExecuteContext::setHttpFactory,httpFactory)
-                .build();
+        httpExecuteContext.setUrl(formatUrl);
+        httpExecuteContext.setBodyMap(requestBody);
+        httpExecuteContext.setHeaderMap(headerMap);
         // 拦截器模式
         Class<? extends RestPlusHandleIntercept>[] interceptList = AnnotationUtil.getObject(clazz, Intercept.class, "classType");
 
         for (Class<? extends RestPlusHandleIntercept> object : interceptList) {
             RestPlusHandleIntercept handleIntercept = SpringUtil.getBean(object);
-            context = handleIntercept.handle(context);
+            httpExecuteContext = handleIntercept.handle(httpExecuteContext);
         }
 
         // 模板方法模式
-        return executeHttp(context);
+        return executeHttp(httpExecuteContext);
     }
 
 
     public abstract RestPlusResponse executeHttp(HttpExecuteContext context);
-
 
 
     public static String parseTemplate(String template, Map properties) {

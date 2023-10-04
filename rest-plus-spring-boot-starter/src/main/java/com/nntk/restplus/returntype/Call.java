@@ -1,19 +1,23 @@
 package com.nntk.restplus.returntype;
 
-import com.nntk.restplus.abs.AbsHttpFactory;
 import com.nntk.restplus.abs.AbsBasicRespObserver;
 import com.nntk.restplus.abs.AbsBodyHandleRule;
+import com.nntk.restplus.abs.AbsHttpFactory;
 import com.nntk.restplus.util.HttpRespObserver;
+import com.nntk.restplus.util.IoUtil;
 
-
+import java.io.File;
 import java.lang.reflect.Type;
 
 
 public class Call<T> {
 
-    public int getHttpStatus() {
-        return httpStatus;
+
+    public void setBodyStream(byte[] bodyStream) {
+        this.bodyStream = bodyStream;
     }
+
+    private byte[] bodyStream;
 
     public void setHttpStatus(int httpStatus) {
         this.httpStatus = httpStatus;
@@ -21,9 +25,6 @@ public class Call<T> {
 
     private int httpStatus;
 
-    public Throwable getThrowable() {
-        return throwable;
-    }
 
     public void setThrowable(Throwable throwable) {
         this.throwable = throwable;
@@ -31,17 +32,16 @@ public class Call<T> {
 
     private Throwable throwable;
 
-    public AbsBasicRespObserver getConfigObserver() {
-        return configObserver;
+    public void setDownloadFile(File downloadFile) {
+        this.downloadFile = downloadFile;
     }
+
+    private File downloadFile;
 
     public void setConfigObserver(AbsBasicRespObserver configObserver) {
         this.configObserver = configObserver;
     }
 
-    public AbsBodyHandleRule getRespBodyHandleRule() {
-        return absBodyHandleRule;
-    }
 
     public void setRespBodyHandleRule(AbsBodyHandleRule absBodyHandleRule) {
         this.absBodyHandleRule = absBodyHandleRule;
@@ -59,10 +59,6 @@ public class Call<T> {
 
     private boolean isObserve = false;
 
-    public AbsHttpFactory getHttpFactory() {
-        return httpFactory;
-    }
-
     public void setHttpFactory(AbsHttpFactory httpFactory) {
         this.httpFactory = httpFactory;
     }
@@ -72,7 +68,8 @@ public class Call<T> {
 
     public Call<T> observe(AbsBasicRespObserver observer) {
         isObserve = true;
-        HttpRespObserver.observe(observer, throwable, httpStatus, absBodyHandleRule);
+
+        HttpRespObserver.observe(observer, throwable, httpStatus, absBodyHandleRule, bodyStream != null);
         return this;
     }
 
@@ -88,9 +85,12 @@ public class Call<T> {
         if (!isObserve) {
             observe(configObserver);
         }
+
+        if (bodyStream != null) {
+            return (T) IoUtil.byteToFile(bodyStream, downloadFile);
+        }
         String data = absBodyHandleRule.getData();
         return httpFactory.parseObject(data, returnType);
     }
-
 
 }

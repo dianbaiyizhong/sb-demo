@@ -21,4 +21,14 @@ public class RestPlusResponse {
     }
 
     private String body;
+
+    public byte[] getBodyStream() {
+        return bodyStream;
+    }
+
+    public void setBodyStream(byte[] bodyStream) {
+        this.bodyStream = bodyStream;
+    }
+
+    private byte[] bodyStream;
 }
