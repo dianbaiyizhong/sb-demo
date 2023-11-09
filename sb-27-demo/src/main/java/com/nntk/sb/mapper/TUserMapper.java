@@ -29,4 +29,8 @@ public interface TUserMapper {
     int updateByPrimaryKeySelective(TUser record);
 
     int updateByPrimaryKey(TUser record);
+
+    int batchInsert(@Param("list") List<TUser> list);
+
+    int batchInsertSelective(@Param("list") List<TUser> list, @Param("selective") TUser.Column ... selective);
 }
