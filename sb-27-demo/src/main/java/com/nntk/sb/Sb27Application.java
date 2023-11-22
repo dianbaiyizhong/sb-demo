@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@EnableAsync
+@EnableAsync(proxyTargetClass = true)
 public class Sb27Application {
 
 

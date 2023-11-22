@@ -1,23 +1,22 @@
 package com.nntk.sb.controller;
 
-import com.nntk.sb.service.S3Service;
+import com.nntk.sb.service.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-
 public class TestController {
 
     @Autowired
-    private S3Service s3Service;
+    private ITestService testService;
 
 
-    @RequestMapping("/s3")
-    public String s3(){
+    @RequestMapping("/test")
+    public String test(){
 
-        s3Service.upload();
-        return "s3";
+        testService.test();
+        return "success";
     }
 
 }
