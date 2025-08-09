@@ -19,3 +19,4 @@ buildNumber.properties
 ehcache
 
 sb-demo-vue/src/main/resources/static/**
+.DS_Store

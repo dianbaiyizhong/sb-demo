@@ -11,6 +11,7 @@
     <modules>
         <module>sb-demo-awesome</module>
         <module>sb-demo-vue</module>
+        <module>sb-ai</module>
     </modules>
 
     <properties>

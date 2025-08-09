@@ -20,6 +20,15 @@
         </dependency>
 
 
+
+
+        <dependency>
+            <groupId>cn.zhxu</groupId>
+            <artifactId>bean-searcher-boot-starter</artifactId>
+            <version>4.3.2</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>

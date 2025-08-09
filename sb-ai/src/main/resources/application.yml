@@ -1,0 +1,24 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  cache:
+    cache-names: news
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://127.0.0.1/ai_db?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&useTimezone=true&allowPublicKeyRetrieval=true
+langchain4j:
+  open-ai:
+    chat-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      api-key: sk-cb80f6a73a5f4ffb80b12f3260eb7217
+      model-name: qwen-plus
+      log-requests: false # 在终端输出请求参数日志
+      log-responses: false # 在终端输出响应参数日志
+
+openai:
+  ai:
+    url: http://localhost:11434

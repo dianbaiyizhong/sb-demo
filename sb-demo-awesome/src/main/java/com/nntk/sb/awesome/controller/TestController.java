@@ -1,9 +1,13 @@
 package com.nntk.sb.awesome.controller;
 
 import cn.hutool.extra.spring.SpringUtil;
+import cn.zhxu.bs.BeanMeta;
+import cn.zhxu.bs.BeanSearcher;
+import cn.zhxu.bs.util.MapUtils;
 import com.nntk.sb.awesome.config.EhcacheConfig;
 import com.nntk.sb.awesome.service.DynamicDataSourceService;
 import com.nntk.sb.awesome.service.EhcacheService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.ehcache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +56,17 @@ public class TestController {
 
         dynamicDataSourceService.test();
 
+        return "success";
+
+    }
+
+    @Autowired
+    private BeanSearcher beanSearcher;
+
+    @RequestMapping("/testBs")
+    public String testBs(HttpServletRequest request) {
+
+        MapUtils.flatBuilder(request.getParameterMap());
         return "success";
 
     }
