@@ -50,20 +50,21 @@ public class AiController {
         openAIRequest.setMessages(request.get("messages"));
         openAIRequest.setModel(request.getString("model"));
 
+//        System.out.println("====");
 
-        TAiCache aiCache = aiCacheMapper.selectOne(new QueryWrapper<TAiCache>()
-                .lambda()
-                .eq(TAiCache::getPromptMd5, MD5.create().digestHex(JSON.toJSONString(request.get("messages"))))
-        );
-        if (aiCache != null) {
-            return JSON.parseObject(aiCache.getContent());
-        }
+//        TAiCache aiCache = aiCacheMapper.selectOne(new QueryWrapper<TAiCache>()
+//                .lambda()
+//                .eq(TAiCache::getPromptMd5, MD5.create().digestHex(JSON.toJSONString(request.get("messages"))))
+//        );
+//        if (aiCache != null) {
+//            return JSON.parseObject(aiCache.getContent());
+//        }
         String completion = openAIService.getCompletion(requestBody);
-        aiCache = new TAiCache();
-        aiCache.setPromptMd5(MD5.create().digestHex(JSON.toJSONString(request.get("messages"))));
-        aiCache.setPrompt(JSON.toJSONString(request.get("messages")));
-        aiCache.setContent(completion);
-        aiCacheMapper.insert(aiCache);
+//        aiCache = new TAiCache();
+//        aiCache.setPromptMd5(MD5.create().digestHex(JSON.toJSONString(request.get("messages"))));
+//        aiCache.setPrompt(JSON.toJSONString(request.get("messages")));
+//        aiCache.setContent(completion);
+//        aiCacheMapper.insert(aiCache);
         return JSON.parseObject(completion);
     }
 

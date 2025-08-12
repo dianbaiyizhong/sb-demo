@@ -21,4 +21,4 @@ langchain4j:
 
 openai:
   ai:
-    url: http://localhost:11434
+    url: http://localhost:11434/v1/chat/completions

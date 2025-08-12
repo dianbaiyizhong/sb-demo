@@ -15,12 +15,11 @@ import reactor.core.publisher.Mono;
 @Service
 public class OpenAIService {
 
-    @Value("${openai.api.key:sk-cb80f6a73a5f4ffb80b12f3260eb7217}")
+    @Value("${openai.ai.key:sk-cb80f6a73a5f4ffb80b12f3260eb7217}")
     private String apiKey;
 
-    @Value("${openai.api.url:https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions}")
+    @Value("${openai.ai.url:https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions}")
     private String apiUrl;
-
 
 
     public String getCompletion(Object request) {
@@ -32,6 +31,7 @@ public class OpenAIService {
         httpRequest.body(JSON.toJSONString(request));
 
         HttpResponse execute = httpRequest.execute();
+        System.out.println(execute.body());
         return execute.body();
     }
 }
