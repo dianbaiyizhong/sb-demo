@@ -1,5 +1,6 @@
 package com.nntk.sb;
 
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.crypto.digest.MD5;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
@@ -8,11 +9,13 @@ import com.nntk.sb.mp.generate.entity.TAiCache;
 import com.nntk.sb.mp.generate.mapper.TAiCacheMapper;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.Charset;
 import java.util.Map;
 
 @RestController
@@ -42,8 +45,17 @@ public class AiController {
     @Autowired
     private OpenAIService openAIService;
 
+    @GetMapping("/v1/models")
+    public Object getModels() {
 
-    @PostMapping("/chat/completions")
+
+        String s = ResourceUtil.readStr("models.json", Charset.defaultCharset());
+
+        return JSON.parseObject(s);
+
+    }
+
+    @PostMapping("/v1/chat/completions")
     public Object getCompletion(@RequestBody Map<String, Object> requestBody) {
         JSONObject request = JSON.parseObject(JSON.toJSONString(requestBody));
         OpenAIRequest openAIRequest = new OpenAIRequest();

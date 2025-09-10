@@ -19,6 +19,6 @@ langchain4j:
       log-requests: false # 在终端输出请求参数日志
       log-responses: false # 在终端输出响应参数日志
 
-openai:
-  ai:
-    url: http://localhost:11434/v1/chat/completions
+#openai:
+#  ai:
+#    url: http://localhost:11434/v1/chat/completions
